@@ -1,0 +1,175 @@
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-header);
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+/* Sobre o hero: transparente, texto claro. */
+.overlay {
+  color: #fff;
+  background: linear-gradient(to bottom, rgb(20 15 10 / 45%), transparent);
+}
+
+/* Após rolar (ou em páginas internas): fundo do papel, texto escuro. */
+.solid {
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: 0 1px 0 var(--color-border);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  width: min(100% - 2 * var(--page-gutter), var(--container-max));
+  height: var(--header-h);
+  margin-inline: auto;
+}
+
+.brand {
+  display: inline-flex;
+  min-height: var(--tap-min);
+  align-items: center;
+}
+
+.nav {
+  display: none;
+  align-items: center;
+  gap: var(--space-8);
+  margin-left: auto;
+}
+
+.link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.link:hover::after,
+.link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.cta {
+  display: none;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: var(--radius-pill);
+  border: 1px solid currentColor;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out);
+}
+
+.overlay .cta:hover {
+  background: #fff;
+  color: var(--espresso);
+}
+
+.solid .cta {
+  background: var(--espresso);
+  color: var(--paper);
+  border-color: var(--espresso);
+}
+.solid .cta:hover {
+  background: var(--clay-strong);
+  border-color: var(--clay-strong);
+}
+
+.toggle {
+  display: inline-grid;
+  place-items: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  margin-right: -10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+/* Menu móvel: tela cheia */
+.mobile {
+  position: fixed;
+  inset: var(--header-h) 0 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-8) var(--page-gutter) calc(var(--space-8) + env(safe-area-inset-bottom));
+  background: var(--paper);
+  color: var(--espresso);
+  overflow-y: auto;
+}
+
+.mobile[hidden] {
+  display: none;
+}
+
+.mobileLink {
+  display: block;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 9vw, 3rem);
+  letter-spacing: var(--tracking-display);
+  line-height: 1.1;
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+}
+
+.mobile[data-open="true"] .mobileLink {
+  opacity: 1;
+  transform: none;
+}
+
+.mobileCta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  margin-top: var(--space-8);
+  border-radius: var(--radius-pill);
+  background: var(--espresso);
+  color: var(--paper);
+  font-weight: 600;
+}
+
+@media (min-width: 900px) {
+  .nav,
+  .cta {
+    display: inline-flex;
+  }
+  .toggle,
+  .mobile {
+    display: none !important;
+  }
+}

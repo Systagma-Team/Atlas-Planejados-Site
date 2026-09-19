@@ -1,0 +1,115 @@
+.section {
+  padding-block: var(--section-y);
+  background: var(--color-surface);
+}
+
+.header {
+  margin-bottom: var(--space-12);
+}
+
+.title {
+  margin-top: var(--space-3);
+  font-size: var(--text-h2);
+}
+
+.list {
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "index name preview"
+    "index count preview";
+  column-gap: var(--space-5);
+  row-gap: 2px;
+  align-items: center;
+  padding-block: var(--space-6);
+  border-bottom: 1px solid var(--color-border-strong);
+  transition: padding var(--duration-base) var(--ease-out);
+}
+
+.index {
+  grid-area: index;
+  align-self: start;
+  padding-top: 0.6em;
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-text-accent);
+}
+
+.name {
+  grid-area: name;
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-display);
+}
+
+.count {
+  grid-area: count;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.arrow {
+  display: none;
+}
+
+.preview {
+  grid-area: preview;
+  width: 96px;
+}
+
+@media (min-width: 900px) {
+  .row {
+    grid-template-columns: 4rem 1fr auto auto;
+    grid-template-areas: "index name count arrow";
+    padding-block: var(--space-8);
+  }
+
+  .index {
+    align-self: center;
+    padding-top: 0;
+  }
+
+  .arrow {
+    grid-area: arrow;
+    display: block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .row:hover,
+  .row:focus-visible {
+    padding-left: var(--space-4);
+  }
+
+  .row:hover .arrow,
+  .row:focus-visible .arrow {
+    transform: translate(4px, -4px);
+  }
+
+  /* Pré-visualização flutuante: aparece ao passar o mouse ou focar com o teclado. */
+  .preview {
+    position: absolute;
+    top: 50%;
+    right: 22%;
+    width: 280px;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(-46%) rotate(-1.5deg) scale(0.96);
+    transition:
+      opacity var(--duration-base) var(--ease-out),
+      transform var(--duration-slow) var(--ease-out);
+    pointer-events: none;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .row:hover .preview,
+  .row:focus-visible .preview {
+    opacity: 1;
+    transform: translateY(-50%) rotate(0) scale(1);
+  }
+}

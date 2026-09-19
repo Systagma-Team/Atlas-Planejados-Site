@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+data/
+.env
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+.env.supabase
+.env.*.local
+
+# Material de referência de terceiros (Formly / wireframe) — não faz parte do código; contém SVG de ~38 MB
+design_system/
+# Configuração local de ferramentas
+.claude/

@@ -1,0 +1,107 @@
+.section {
+  padding-bottom: var(--section-y);
+}
+
+.storyGrid {
+  display: grid;
+  gap: var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.story {
+  display: grid;
+  gap: var(--space-5);
+  max-width: 44rem;
+  font-family: var(--font-display);
+  font-size: var(--text-h4);
+  line-height: 1.45;
+}
+
+.placeholder {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  padding: var(--space-6);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--color-text-muted);
+}
+
+.placeholderTag {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--sand-soft);
+  color: var(--clay-ink);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.principles {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.principle {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-strong);
+  color: var(--color-text-muted);
+}
+
+.num {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.principleTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.mosaicSection {
+  padding-bottom: var(--section-y);
+}
+
+.mosaic {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.mosaicAction {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-10);
+}
+
+@media (min-width: 900px) {
+  .storyGrid {
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-16);
+  }
+
+  .principles {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
+  }
+
+  .mosaic {
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: var(--space-8);
+    align-items: end;
+  }
+
+  .mosaicItem[data-i="2"] {
+    margin-bottom: var(--space-16);
+  }
+}

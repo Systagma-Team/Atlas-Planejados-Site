@@ -1,0 +1,8 @@
+# Normaliza fim de linha (Windows/Linux) e marca imagens/fontes como binários
+* text=auto eol=lf
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+*.ico binary
+*.woff2 binary

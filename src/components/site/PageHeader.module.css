@@ -1,0 +1,17 @@
+.header {
+  padding-top: calc(var(--header-h) + clamp(48px, 8vw, 112px));
+  padding-bottom: clamp(32px, 5vw, 64px);
+}
+
+.title {
+  margin-top: var(--space-4);
+  font-size: var(--text-h1);
+  max-width: 16ch;
+}
+
+.lead {
+  margin-top: var(--space-6);
+  max-width: 36rem;
+  font-size: var(--text-lead);
+  color: var(--color-text-muted);
+}

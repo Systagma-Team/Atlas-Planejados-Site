@@ -1,0 +1,122 @@
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: max(640px, 100svh);
+  padding: calc(var(--header-h) + var(--space-16)) var(--page-gutter) var(--space-12);
+  color: #fff;
+  background: var(--espresso);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.plain {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 80% 10%, #4a3a2c 0%, var(--espresso) 65%);
+}
+
+/* Escurece a base da foto para garantir contraste do texto. */
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgb(18 13 9 / 82%) 0%, rgb(18 13 9 / 38%) 45%, rgb(18 13 9 / 10%) 100%),
+    linear-gradient(to right, rgb(18 13 9 / 35%), transparent 60%);
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: var(--space-6);
+  max-width: min(100%, 60rem);
+  margin-inline: 0;
+  animation: rise var(--duration-image) var(--ease-out) both;
+}
+
+@media (min-width: 1200px) {
+  .content {
+    margin-left: max(0px, calc((100% - var(--container-max)) / 2));
+  }
+}
+
+.eyebrow {
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--sand);
+}
+
+.title {
+  font-size: var(--text-display);
+  text-shadow: 0 2px 30px rgb(0 0 0 / 25%);
+}
+
+.lead {
+  max-width: 34rem;
+  font-size: var(--text-lead);
+  line-height: 1.5;
+  color: rgb(255 255 255 / 88%);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.caption {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    padding-bottom: var(--space-16);
+  }
+
+  .caption {
+    position: absolute;
+    z-index: 2;
+    right: var(--page-gutter);
+    bottom: var(--space-16);
+    display: grid;
+    gap: 2px;
+    max-width: 22rem;
+    padding-left: var(--space-4);
+    border-left: 1px solid rgb(255 255 255 / 45%);
+    text-align: left;
+    transition: border-color var(--duration-base) var(--ease-out);
+  }
+
+  .caption:hover {
+    border-color: #fff;
+  }
+}
+
+.captionLabel {
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--sand);
+}
+
+.captionTitle {
+  font-size: var(--text-small);
+  line-height: 1.4;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

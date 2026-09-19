@@ -1,0 +1,92 @@
+.card {
+  position: relative;
+  display: block;
+}
+
+.media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-image);
+}
+
+/* Zoom lento e discreto ao passar o mouse. */
+.picture img {
+  transition: transform var(--duration-image) var(--ease-out);
+}
+
+.card:hover .picture img,
+.card:focus-within .picture img {
+  transform: scale(1.035);
+}
+
+.badge {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--espresso);
+  font-size: var(--text-small);
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+  pointer-events: none;
+}
+
+.card:hover .badge,
+.card:focus-within .badge {
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: none) {
+  .badge {
+    display: none;
+  }
+}
+
+.meta {
+  padding-top: var(--space-4);
+}
+
+.category {
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-accent);
+}
+
+.title {
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: var(--text-h4);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* O link ocupa o card inteiro (área clicável ampla, um único destino para leitores de tela). */
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.card:has(.link:focus-visible) .media {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}

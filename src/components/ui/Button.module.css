@@ -1,0 +1,75 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 28px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.icon {
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.button:hover .icon {
+  transform: translateX(4px);
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.primary {
+  background: var(--espresso);
+  color: var(--paper);
+}
+.primary:hover {
+  background: var(--clay-strong);
+}
+
+.secondary {
+  background: transparent;
+  color: var(--espresso);
+  border-color: var(--espresso);
+}
+.secondary:hover {
+  background: var(--espresso);
+  color: var(--paper);
+}
+
+.light {
+  background: var(--paper);
+  color: var(--espresso);
+}
+.light:hover {
+  background: var(--sand);
+}
+
+.ghost-light {
+  background: rgb(255 255 255 / 8%);
+  color: #fff;
+  border-color: rgb(255 255 255 / 55%);
+  backdrop-filter: blur(6px);
+}
+.ghost-light:hover {
+  background: #fff;
+  color: var(--espresso);
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

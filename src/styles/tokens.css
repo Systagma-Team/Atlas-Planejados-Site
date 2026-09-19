@@ -1,0 +1,126 @@
+/* ==========================================================================
+   Atlas Planejados — Design tokens
+   --------------------------------------------------------------------------
+   Origem das decisões (design_system/):
+   - "Desktop 1920": fundo #F6F4F2, marrom #947458, texto grafite, bordas #DEE2E6,
+     tipografia geométrica, seções amplas separadas por faixas de fundo.
+   - Formly kit: canvas creme, areia #D0BCA1, botões em pílula, títulos com entrelinha
+     apertada, muito respiro entre seções, fotografia carregando o peso visual.
+   Adaptações para a Atlas:
+   - O móvel das fotos é branco/claro: o fundo neutro-quente e o espresso escuro dão contraste.
+   - #947458 puro dá só 4,3:1 com texto branco; por isso existem --clay-strong (botões/textos)
+     e --clay (detalhes decorativos e texto grande).
+   - Display em serifa (Fraunces) para dar personalidade editorial; corpo em DM Sans
+     (a geometria do wireframe de referência).
+   Breakpoints (media queries não aceitam var()): 640px · 900px · 1200px.
+   ========================================================================== */
+:root {
+  /* Cores — primitivas */
+  --paper: #f6f4f2;
+  --cream: #eee8d9;
+  --cream-soft: #f0ebe1;
+  --sand: #d0bca1;
+  --sand-soft: #e6dccb;
+  --clay: #947458;
+  --clay-strong: #7c5f44;
+  --clay-ink: #6a4f36;
+  --espresso: #1f1a16;
+  --espresso-soft: #2b2520;
+  --stone: #5f574d;
+  --white: #ffffff;
+
+  /* Cores — semânticas */
+  --color-bg: var(--paper);
+  --color-surface: var(--cream-soft);
+  --color-surface-strong: var(--cream);
+  --color-text: var(--espresso);
+  --color-text-muted: var(--stone);
+  --color-text-accent: var(--clay-ink);
+  --color-border: var(--sand-soft);
+  --color-border-strong: var(--sand);
+  --color-inverse-bg: var(--espresso);
+  --color-inverse-text: #f3eee6;
+  --color-inverse-muted: #b9ae9f;
+  --color-accent: var(--clay);
+  --color-accent-strong: var(--clay-strong);
+  --color-focus: #b4772c;
+  --color-danger: #a2331b;
+  --color-success: #41553e;
+
+  /* Tipografia */
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-body: var(--font-dm-sans), "Helvetica Neue", Arial, sans-serif;
+
+  --text-eyebrow: 0.75rem;
+  --text-small: 0.875rem;
+  --text-body: 1rem;
+  --text-lead: clamp(1.0625rem, 0.98rem + 0.4vw, 1.3125rem);
+  --text-h4: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  --text-h3: clamp(1.5rem, 1.2rem + 1vw, 2.125rem);
+  --text-h2: clamp(2rem, 1.3rem + 2.6vw, 3.75rem);
+  --text-h1: clamp(2.5rem, 1.4rem + 4.6vw, 5.75rem);
+  --text-display: clamp(2.75rem, 1.2rem + 6.4vw, 7.25rem);
+
+  --leading-tight: 1.02;
+  --leading-heading: 1.1;
+  --leading-body: 1.6;
+  --tracking-display: -0.025em;
+  --tracking-eyebrow: 0.14em;
+
+  /* Espaçamento */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --section-y: clamp(72px, 9vw, 152px);
+
+  /* Layout */
+  --container-max: 1440px;
+  --content-max: 1280px;
+  --reading-max: 40rem;
+  --page-gutter: clamp(20px, 4vw, 72px);
+  --header-h: 76px;
+
+  /* Formas */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-image: 4px;
+  --radius-pill: 999px;
+
+  /* Sombras (discretas) */
+  --shadow-sm: 0 1px 2px rgb(31 26 22 / 6%);
+  --shadow-md: 0 8px 24px rgb(31 26 22 / 10%);
+  --shadow-lg: 0 24px 60px rgb(31 26 22 / 18%);
+
+  /* Movimento */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 160ms;
+  --duration-base: 320ms;
+  --duration-slow: 700ms;
+  --duration-image: 1100ms;
+
+  /* Áreas clicáveis */
+  --tap-min: 44px;
+
+  /* Camadas */
+  --z-header: 50;
+  --z-overlay: 80;
+  --z-toast: 100;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-h: 64px;
+  }
+}
