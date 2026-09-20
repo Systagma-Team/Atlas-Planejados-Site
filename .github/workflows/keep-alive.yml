@@ -16,7 +16,8 @@ jobs:
         env:
           HEALTH_URL: ${{ secrets.HEALTH_URL }}
         run: |
-          if [ -z "$HEALTH_URL" ]; then echo "Segredo HEALTH_URL não configurado"; exit 1; fi
+          # Enquanto o site não estiver publicado, não há o que chamar: avisa e encerra sem erro.
+          if [ -z "$HEALTH_URL" ]; then echo "::notice::Segredo HEALTH_URL ainda não configurado; nada a fazer."; exit 0; fi
           # Tenta até 3 vezes (o site pode estar "acordando"); falha o job se não responder 200.
           for i in 1 2 3; do
             code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$HEALTH_URL" || echo 000)
