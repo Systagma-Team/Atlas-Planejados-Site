@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getSettings } from "@/server/services/settings";
 import { db } from "@/server/db";
-import { whatsappLink } from "@/lib/site";
+import { whatsappOptions } from "@/lib/site";
 import { PageHeader } from "@/components/site/PageHeader";
 import { ContactForm } from "@/components/site/ContactForm";
 import { ContactChannels } from "@/components/site/ContactChannels";
@@ -27,9 +27,9 @@ export default async function ContactPage({ searchParams }: Props) {
     if (p) defaultMessage = `Olá! Tenho interesse em um projeto como “${p.title}”.`;
   }
 
-  const whatsapp = settings.whatsapp ? whatsappLink(settings.whatsapp, defaultMessage || "Olá! Gostaria de solicitar um orçamento de móveis planejados.") : null;
+  const whatsapps = whatsappOptions(settings, defaultMessage || "Olá! Gostaria de solicitar um orçamento de móveis planejados.");
   const embed = settings.mapEmbedUrl;
-  const hasChannels = !!(settings.whatsapp || settings.phone || settings.email || settings.address || settings.openingHours || settings.instagram || settings.facebook);
+  const hasChannels = !!(settings.whatsapp || settings.whatsapp2 || settings.phone || settings.email || settings.address || settings.openingHours || settings.instagram || settings.facebook);
 
   return (
     <>
@@ -47,13 +47,17 @@ export default async function ContactPage({ searchParams }: Props) {
           </div>
 
           <aside className={styles.infoCol} aria-label="Outros canais de contato">
-            {whatsapp ? (
+            {whatsapps.length > 0 ? (
               <div className={styles.whatsapp}>
                 <h2 className={styles.colTitle}>Prefere o WhatsApp?</h2>
-                <p>Chame a gente direto pelo aplicativo.</p>
-                <Button href={whatsapp} external icon="whatsapp">
-                  Chamar no WhatsApp
-                </Button>
+                <p>{whatsapps.length > 1 ? "Chame a gente direto pelo aplicativo, em qualquer um dos dois números." : "Chame a gente direto pelo aplicativo."}</p>
+                <div className={styles.whatsappButtons}>
+                  {whatsapps.map((w) => (
+                    <Button key={w.key} href={w.href} external icon="whatsapp">
+                      {w.label === "WhatsApp" ? "Chamar no WhatsApp" : `${w.label} · ${w.number}`}
+                    </Button>
+                  ))}
+                </div>
               </div>
             ) : null}
             {hasChannels ? (

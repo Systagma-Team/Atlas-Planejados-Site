@@ -27,10 +27,13 @@ export function SettingsForm({ settings, action }: { settings: SiteSettings; act
         </div>
         <div className="adm-form">
           <div className="adm-row adm-row--2">
-            <TextField label="WhatsApp" name="whatsapp" defaultValue={settings.whatsapp} error={e.whatsapp} inputMode="tel" placeholder="(11) 91234-5678" help="Com DDD. O botão “Chamar no WhatsApp” aparece no site quando este campo está preenchido." />
-            <TextField label="Telefone" name="phone" defaultValue={settings.phone} error={e.phone} inputMode="tel" placeholder="(11) 3456-7890" />
+            <TextField label="WhatsApp principal" name="whatsapp" defaultValue={settings.whatsapp} error={e.whatsapp} inputMode="tel" placeholder="+55 84 99999-9999" help="Com DDD. Os botões de WhatsApp aparecem no site quando este campo está preenchido." />
+            <TextField label={<>WhatsApp secundário <small>(opcional)</small></>} name="whatsapp2" defaultValue={settings.whatsapp2} error={e.whatsapp2} inputMode="tel" placeholder="+55 84 99999-9999" help="Se preenchido, o botão flutuante do site oferece os dois números." />
           </div>
-          <TextField label="E-mail" name="email" type="email" defaultValue={settings.email} error={e.email} placeholder="contato@seudominio.com.br" />
+          <div className="adm-row adm-row--2">
+            <TextField label="Telefone" name="phone" defaultValue={settings.phone} error={e.phone} inputMode="tel" placeholder="(84) 3456-7890" />
+            <TextField label="E-mail" name="email" type="email" defaultValue={settings.email} error={e.email} placeholder="contato@seudominio.com.br" />
+          </div>
           <TextField label="Endereço" name="address" defaultValue={settings.address} error={e.address} placeholder="Rua, número, bairro, cidade" />
           <TextField label="Horário de atendimento" name="openingHours" defaultValue={settings.openingHours} error={e.openingHours} placeholder="Ex.: Segunda a sexta, 8h às 18h" />
         </div>

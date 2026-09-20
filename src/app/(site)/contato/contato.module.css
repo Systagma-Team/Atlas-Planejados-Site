@@ -56,3 +56,9 @@
   border-radius: var(--radius-lg);
   filter: saturate(0.85);
 }
+
+.whatsappButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}

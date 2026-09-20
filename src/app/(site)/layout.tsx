@@ -2,9 +2,10 @@ import type { Metadata, Viewport } from "next";
 import "@/styles/tokens.css";
 import "@/styles/base.css";
 import { dmSans, fraunces } from "@/lib/fonts";
-import { SITE_DESCRIPTION, SITE_NAME, siteUrl } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, siteUrl, whatsappOptions } from "@/lib/site";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { WhatsAppFloat } from "@/components/site/WhatsAppFloat";
 import { getActiveCategories } from "@/server/queries/public";
 import { getSettings } from "@/server/services/settings";
 
@@ -42,6 +43,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         <SiteHeader />
         <main id="conteudo">{children}</main>
         <SiteFooter settings={settings} categories={categories} />
+        <WhatsAppFloat options={whatsappOptions(settings, "Olá! Vim pelo site da Atlas Planejados e gostaria de um orçamento.")} />
       </body>
     </html>
   );

@@ -10,6 +10,7 @@ import { onlyDigits } from "@/lib/format";
  */
 export const SETTING_KEYS = [
   "whatsapp",
+  "whatsapp2",
   "phone",
   "email",
   "instagram",
@@ -39,12 +40,15 @@ const optionalUrl = (hosts: string[], message: string) =>
     .max(300)
     .refine((v) => v === "" || hosts.some((h) => v.startsWith(h)), message);
 
+const whatsappField = z
+  .string()
+  .trim()
+  .max(30)
+  .refine((v) => v === "" || (onlyDigits(v).length >= 10 && onlyDigits(v).length <= 13), "Informe o número com DDD. Ex.: (11) 91234-5678.");
+
 const settingsSchema = z.object({
-  whatsapp: z
-    .string()
-    .trim()
-    .max(30)
-    .refine((v) => v === "" || (onlyDigits(v).length >= 10 && onlyDigits(v).length <= 13), "Informe o número com DDD. Ex.: (11) 91234-5678."),
+  whatsapp: whatsappField,
+  whatsapp2: whatsappField,
   phone: z.string().trim().max(30),
   email: z
     .string()

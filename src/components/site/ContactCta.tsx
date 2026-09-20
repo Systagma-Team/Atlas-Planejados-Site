@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
-import { whatsappLink } from "@/lib/site";
+import { whatsappOptions } from "@/lib/site";
 import type { SiteSettings } from "@/server/services/settings";
 import { ContactChannels } from "./ContactChannels";
 import styles from "./ContactCta.module.css";
 
 /** Faixa final de conversão: chamada para orçamento + canais de contato já cadastrados no painel. */
 export function ContactCta({ settings }: { settings: SiteSettings }) {
-  const whatsapp = settings.whatsapp ? whatsappLink(settings.whatsapp, "Olá! Gostaria de solicitar um orçamento de móveis planejados.") : null;
+  const whatsapps = whatsappOptions(settings, "Olá! Gostaria de solicitar um orçamento de móveis planejados.");
 
   return (
     <section className={styles.section} aria-labelledby="cta-title">
@@ -22,11 +22,11 @@ export function ContactCta({ settings }: { settings: SiteSettings }) {
             <Button href="/contato" variant="primary" icon="arrow">
               Solicitar orçamento
             </Button>
-            {whatsapp ? (
-              <Button href={whatsapp} external variant="secondary" icon="whatsapp">
-                Chamar no WhatsApp
+            {whatsapps.map((w) => (
+              <Button key={w.key} href={w.href} external variant="secondary" icon="whatsapp">
+                {w.label === "WhatsApp" ? "Chamar no WhatsApp" : `WhatsApp ${w.label.toLowerCase()}`}
               </Button>
-            ) : null}
+            ))}
           </div>
         </Reveal>
         <Reveal delay={120} className={styles.channels}>

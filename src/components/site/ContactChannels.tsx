@@ -1,5 +1,5 @@
 import { Icon, type IconName } from "@/components/ui/Icon";
-import { telLink, whatsappLink } from "@/lib/site";
+import { telLink, whatsappOptions } from "@/lib/site";
 import type { SiteSettings } from "@/server/services/settings";
 import styles from "./ContactChannels.module.css";
 
@@ -8,7 +8,7 @@ type Channel = { key: string; icon: IconName; label: string; value: string; href
 /** Lista apenas os canais que o administrador já preencheu. Nada é exibido por padrão. */
 export function getChannels(s: SiteSettings): Channel[] {
   const channels: (Channel | null)[] = [
-    s.whatsapp ? { key: "whatsapp", icon: "whatsapp", label: "WhatsApp", value: s.whatsapp, href: whatsappLink(s.whatsapp) ?? undefined, external: true } : null,
+    ...whatsappOptions(s).map((w): Channel => ({ key: w.key, icon: "whatsapp", label: w.label === "WhatsApp" ? "WhatsApp" : `WhatsApp · ${w.label}`, value: w.number, href: w.href, external: true })),
     s.phone ? { key: "phone", icon: "phone", label: "Telefone", value: s.phone, href: telLink(s.phone) ?? undefined } : null,
     s.email ? { key: "email", icon: "mail", label: "E-mail", value: s.email, href: `mailto:${s.email}` } : null,
     s.address ? { key: "address", icon: "pin", label: "Endereço", value: s.address } : null,

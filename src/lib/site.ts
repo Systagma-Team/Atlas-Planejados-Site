@@ -19,3 +19,25 @@ export function telLink(phone: string) {
   const digits = phone.replace(/\D/g, "");
   return digits ? `tel:+${digits.length <= 11 ? "55" : ""}${digits}` : null;
 }
+
+export type WhatsappOption = { key: "whatsapp" | "whatsapp2"; label: string; number: string; href: string };
+
+/**
+ * Números de WhatsApp cadastrados no painel (principal e, opcionalmente, secundário), já com o link pronto.
+ * Com um único número o rótulo é "WhatsApp"; com dois, "Principal" e "Secundário".
+ */
+export function whatsappOptions(settings: { whatsapp?: string; whatsapp2?: string }, text?: string): WhatsappOption[] {
+  const raw = [
+    { key: "whatsapp" as const, number: settings.whatsapp ?? "" },
+    { key: "whatsapp2" as const, number: settings.whatsapp2 ?? "" },
+  ].filter((o) => o.number.trim() !== "");
+  const options = raw
+    .map((o) => ({ ...o, href: whatsappLink(o.number, text) }))
+    .filter((o): o is typeof o & { href: string } => o.href !== null);
+  return options.map((o) => ({
+    key: o.key,
+    number: o.number,
+    href: o.href,
+    label: options.length === 1 ? "WhatsApp" : o.key === "whatsapp" ? "Principal" : "Secundário",
+  }));
+}
