@@ -62,12 +62,37 @@
   border-top: 1px solid rgb(255 255 255 / 12%);
 }
 
-.legal p {
+.legalInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-6);
   width: min(100% - 2 * var(--page-gutter), var(--container-max));
   margin-inline: auto;
-  padding-block: var(--space-6);
+  padding-top: var(--space-6);
+  /* Espaço extra no fim da página para o botão flutuante do WhatsApp não cobrir o crédito. */
+  padding-bottom: calc(var(--space-6) + 72px);
   font-size: var(--text-small);
   color: var(--color-inverse-muted);
+}
+
+.credit {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.credit img {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+
+.credit strong {
+  font-weight: 600;
+  color: var(--color-inverse-text);
 }
 
 @media (min-width: 640px) {

@@ -55,7 +55,16 @@ export function SiteFooter({ settings, categories }: Props) {
       </div>
 
       <div className={styles.legal}>
-        <p>© {new Date().getFullYear()} Atlas Planejados. Todos os direitos reservados.</p>
+        <div className={styles.legalInner}>
+          <p>© {new Date().getFullYear()} Atlas Planejados. Todos os direitos reservados.</p>
+          <p className={styles.credit}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/systagma-logo.webp`} alt="" width={28} height={28} loading="lazy" />
+            <span>
+              Site desenvolvido pela <strong>Systagma</strong>
+            </span>
+          </p>
+        </div>
       </div>
     </footer>
   );
