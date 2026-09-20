@@ -1,0 +1,15 @@
+# Site estático: o Netlify só precisa rodar o build e publicar a pasta out/.
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Não é um app Next com servidor: dispensa o plugin de runtime do Netlify.
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
+# Página de erro do site (gerada pelo Next).
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
