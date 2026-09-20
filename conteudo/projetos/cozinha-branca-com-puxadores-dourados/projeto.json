@@ -1,0 +1,15 @@
+{
+  "titulo": "Cozinha branca com puxadores dourados",
+  "categoria": "cozinhas",
+  "descricao": "Armários brancos com gavetas de detalhe escuro, puxadores dourados e tampo preto.",
+  "destaque": false,
+  "publicado": true,
+  "data": "2026-09-08",
+  "fotos": [
+    {
+      "tratada": "cozinha-branca-puxadores-dourados.png",
+      "original": "cozinha-branca-puxadores-dourados-original.jpeg",
+      "alt": "Cozinha com armários brancos, gavetas com detalhe escuro, puxadores dourados e tampo preto"
+    }
+  ]
+}

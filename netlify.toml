@@ -1,7 +1,0 @@
-# Netlify detecta o Next.js automaticamente (adaptador oficial). Variáveis (banco, Supabase, AUTH_SECRET, SITE_URL...)
-# são cadastradas em Site configuration > Environment variables — veja .env.example e o README.
-[build]
-  command = "npm run build"
-
-[build.environment]
-  NODE_VERSION = "22"

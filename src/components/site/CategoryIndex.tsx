@@ -26,7 +26,7 @@ export function CategoryIndex({ categories }: { categories: Item[] }) {
           {categories.map((category, i) => (
             <li key={category.id}>
               <Reveal delay={i * 60}>
-                <Link href={`/projetos?categoria=${category.slug}`} className={styles.row}>
+                <Link href={`/projetos/categoria/${category.slug}`} className={styles.row}>
                   <span className={styles.index} aria-hidden="true">
                     {String(i + 1).padStart(2, "0")}
                   </span>

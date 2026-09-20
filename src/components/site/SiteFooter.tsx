@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { ContactChannels } from "./ContactChannels";
-import type { SiteSettings } from "@/server/services/settings";
+import type { SiteSettings } from "@/lib/content";
 import styles from "./SiteFooter.module.css";
 
 type Props = {
@@ -36,7 +36,7 @@ export function SiteFooter({ settings, categories }: Props) {
             <ul>
               {categories.map((c) => (
                 <li key={c.id}>
-                  <Link href={`/projetos?categoria=${c.slug}`}>{c.name}</Link>
+                  <Link href={`/projetos/categoria/${c.slug}`}>{c.name}</Link>
                 </li>
               ))}
             </ul>

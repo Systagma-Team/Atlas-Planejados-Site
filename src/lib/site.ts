@@ -1,7 +1,10 @@
+import { configuredSiteUrl } from "@/lib/content";
+
 export const SITE_NAME = "Atlas Planejados";
 
+/** Endereço público do site (para canonical, sitemap e compartilhamento). Defina em conteudo/site.json → urlDoSite. */
 export function siteUrl() {
-  return (process.env.SITE_URL || "http://localhost:3000").replace(/\/$/, "");
+  return configuredSiteUrl() || "http://localhost:3000";
 }
 
 export const SITE_DESCRIPTION =

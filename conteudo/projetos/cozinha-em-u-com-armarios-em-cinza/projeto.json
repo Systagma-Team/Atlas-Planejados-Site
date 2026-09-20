@@ -1,0 +1,20 @@
+{
+  "titulo": "Cozinha em U com armários em cinza",
+  "categoria": "cozinhas",
+  "descricao": "Cozinha planejada em U, armários cinza com puxadores embutidos e nicho para adega.",
+  "destaque": true,
+  "publicado": true,
+  "data": "2026-09-18",
+  "fotos": [
+    {
+      "tratada": "cozinha-u-cinza-frente.png",
+      "original": "cozinha-u-cinza-frente-original.jpeg",
+      "alt": "Cozinha em U vista de frente, com armários cinza, bancada de pedra e janela de madeira ao centro"
+    },
+    {
+      "tratada": "cozinha-u-cinza-peninsula.png",
+      "original": "cozinha-u-cinza-peninsula-original.jpeg",
+      "alt": "Cozinha em U com península de bancada de pedra e painel de madeira, armários cinza e geladeira inox"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
-import type { ProjectCardData } from "@/server/queries/public";
+import type { ProjectCardData } from "@/lib/content";
 import { ProjectCard } from "./ProjectCard";
 import styles from "./FeaturedProjects.module.css";
 

@@ -1,0 +1,25 @@
+{
+  "titulo": "Arara com gavetas e nichos",
+  "categoria": "lojas",
+  "descricao": "Módulos brancos com barra para cabides, gavetas com cava e nichos inferiores.",
+  "destaque": false,
+  "publicado": true,
+  "data": "2026-09-10",
+  "fotos": [
+    {
+      "tratada": "arara-gavetas-frente.png",
+      "original": "arara-gavetas-frente-original.jpeg",
+      "alt": "Módulo branco com barra para cabides e duas gavetas na base"
+    },
+    {
+      "tratada": "arara-gavetas-oficina.png",
+      "original": "arara-gavetas-oficina-original.jpeg",
+      "alt": "Módulo branco com barra para cabides e duas gavetas com cava, em outro ângulo"
+    },
+    {
+      "tratada": "arara-nichos-base.png",
+      "original": "arara-nichos-base-original.jpeg",
+      "alt": "Módulo branco alto com barra para cabides e seis nichos na parte inferior"
+    }
+  ]
+}

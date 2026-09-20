@@ -1,6 +1,6 @@
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { telLink, whatsappOptions } from "@/lib/site";
-import type { SiteSettings } from "@/server/services/settings";
+import type { SiteSettings } from "@/lib/content";
 import styles from "./ContactChannels.module.css";
 
 type Channel = { key: string; icon: IconName; label: string; value: string; href?: string; external?: boolean };

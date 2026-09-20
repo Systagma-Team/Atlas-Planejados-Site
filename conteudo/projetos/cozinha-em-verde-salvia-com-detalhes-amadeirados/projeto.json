@@ -1,0 +1,15 @@
+{
+  "titulo": "Cozinha em verde-sálvia com detalhes amadeirados",
+  "categoria": "cozinhas",
+  "descricao": "Armários aéreos em verde-sálvia com bordas amadeiradas, nicho aberto e bancada com gavetas.",
+  "destaque": true,
+  "publicado": true,
+  "data": "2026-09-20",
+  "fotos": [
+    {
+      "tratada": "cozinha-verde-salvia.png",
+      "original": "cozinha-verde-salvia-original.jpeg",
+      "alt": "Cozinha com armários aéreos verde-sálvia com bordas amadeiradas, nicho aberto e bancada em L com gavetas"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "titulo": "Guarda-roupa com espelho iluminado",
+  "categoria": "guarda-roupas",
+  "descricao": "Guarda-roupa com portas em tom rosado, armários superiores brancos e nicho lateral com espelho e gavetas.",
+  "destaque": true,
+  "publicado": true,
+  "data": "2026-09-19",
+  "fotos": [
+    {
+      "tratada": "guarda-roupa-espelho-aceso.png",
+      "original": "guarda-roupa-espelho-aceso-original.jpeg",
+      "alt": "Guarda-roupa com portas rosadas, armários superiores brancos, espelho oval iluminado e gavetas com puxadores dourados"
+    },
+    {
+      "tratada": "guarda-roupa-espelho-apagado.png",
+      "original": "guarda-roupa-espelho-apagado-original.jpeg",
+      "alt": "O mesmo guarda-roupa com a iluminação do espelho apagada"
+    }
+  ]
+}

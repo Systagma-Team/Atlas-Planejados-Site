@@ -1,0 +1,15 @@
+{
+  "titulo": "Balcão longo com prateleiras laterais",
+  "categoria": "balcoes-de-caixa",
+  "descricao": "Balcão de atendimento longo com nichos laterais para organização.",
+  "destaque": false,
+  "publicado": true,
+  "data": "2026-09-03",
+  "fotos": [
+    {
+      "tratada": "balcao-longo-nichos.png",
+      "original": "balcao-longo-nichos-original.jpeg",
+      "alt": "Balcão branco longo com nichos nas laterais"
+    }
+  ]
+}

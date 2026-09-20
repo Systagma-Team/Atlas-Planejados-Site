@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Picture } from "@/components/ui/Picture";
-import type { ProjectCardData } from "@/server/queries/public";
+import type { ProjectCardData } from "@/lib/content";
 import styles from "./Hero.module.css";
 
 /** Hero da Home. A foto vem do primeiro projeto em destaque cadastrado no painel. */

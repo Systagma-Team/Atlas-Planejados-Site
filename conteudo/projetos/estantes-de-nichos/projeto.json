@@ -1,0 +1,35 @@
+{
+  "titulo": "Estantes de nichos",
+  "categoria": "lojas",
+  "descricao": "Estantes brancas com nichos de diferentes tamanhos, para exposição e organização.",
+  "destaque": false,
+  "publicado": true,
+  "data": "2026-09-07",
+  "fotos": [
+    {
+      "tratada": "estante-nichos-cabideiro.png",
+      "original": "estante-nichos-cabideiro-original.jpeg",
+      "alt": "Estante branca com nichos e barra para cabides ao centro"
+    },
+    {
+      "tratada": "estante-nichos-ampla.png",
+      "original": "estante-nichos-ampla-original.jpeg",
+      "alt": "Estante ampla de nichos com prateleiras em alturas variadas"
+    },
+    {
+      "tratada": "estante-nichos-coluna.png",
+      "original": "estante-nichos-coluna-original.jpeg",
+      "alt": "Coluna alta de nichos brancos em duas colunas"
+    },
+    {
+      "tratada": "estante-nichos-borda-escura.png",
+      "original": "estante-nichos-borda-escura-original.jpeg",
+      "alt": "Módulo de nichos com borda escura, sobre rodízios"
+    },
+    {
+      "tratada": "estante-prateleiras-e-nichos.png",
+      "original": "estante-prateleiras-e-nichos-original.jpeg",
+      "alt": "Estante alta de prateleiras ao lado de um módulo de nichos com gavetas"
+    }
+  ]
+}

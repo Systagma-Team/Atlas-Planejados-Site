@@ -1,0 +1,15 @@
+{
+  "titulo": "Cozinha em tons claros com nicho amadeirado",
+  "categoria": "cozinhas",
+  "descricao": "Armários claros com nichos em madeira, integrados à geladeira e à bancada de trabalho.",
+  "destaque": true,
+  "publicado": true,
+  "data": "2026-09-15",
+  "fotos": [
+    {
+      "tratada": "cozinha-tons-claros.png",
+      "original": "cozinha-tons-claros-original.jpeg",
+      "alt": "Cozinha com armários em tom claro, nichos amadeirados, micro-ondas embutido e geladeira inox"
+    }
+  ]
+}

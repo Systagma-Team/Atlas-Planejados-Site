@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { whatsappOptions } from "@/lib/site";
-import type { SiteSettings } from "@/server/services/settings";
+import type { SiteSettings } from "@/lib/content";
 import { ContactChannels } from "./ContactChannels";
 import styles from "./ContactCta.module.css";
 

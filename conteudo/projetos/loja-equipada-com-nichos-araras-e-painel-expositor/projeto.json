@@ -1,0 +1,30 @@
+{
+  "titulo": "Loja equipada com nichos, araras e painel expositor",
+  "categoria": "lojas",
+  "descricao": "Conjunto de mobiliário para loja: módulos de nichos com arara, prateleiras de parede e painel canaletado.",
+  "destaque": true,
+  "publicado": true,
+  "data": "2026-09-16",
+  "fotos": [
+    {
+      "tratada": "loja-modulos-e-balcao.png",
+      "original": "loja-modulos-e-balcao-original.jpeg",
+      "alt": "Loja com módulo de nichos e arara ao fundo, prateleiras de parede e balcão branco à direita"
+    },
+    {
+      "tratada": "loja-gavetas-porta-de-vidro.png",
+      "original": "loja-gavetas-porta-de-vidro-original.jpeg",
+      "alt": "Loja com módulo de gavetas e prateleiras diante de uma grande porta de vidro"
+    },
+    {
+      "tratada": "loja-prateleiras-de-parede.png",
+      "original": "loja-prateleiras-de-parede-original.jpeg",
+      "alt": "Prateleiras brancas de parede instaladas ao lado da porta de vidro da loja"
+    },
+    {
+      "tratada": "loja-painel-canaletado.png",
+      "original": "loja-painel-canaletado-original.jpeg",
+      "alt": "Painel canaletado branco fixado na parede para exposição de produtos"
+    }
+  ]
+}

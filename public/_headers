@@ -1,0 +1,13 @@
+# Cabeçalhos de segurança e cache. Valem em Cloudflare Pages e Netlify (o GitHub Pages ignora este arquivo).
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Fotos otimizadas: o nome da pasta é o "hash" do conteúdo, então nunca mudam.
+/media/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable

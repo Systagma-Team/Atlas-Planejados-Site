@@ -1,0 +1,15 @@
+{
+  "titulo": "Cozinha em cinza brilhante com tampo preto",
+  "categoria": "cozinhas",
+  "descricao": "Módulos em acabamento cinza brilhante com tampo escuro e cooktop embutido.",
+  "destaque": false,
+  "publicado": true,
+  "data": "2026-09-09",
+  "fotos": [
+    {
+      "tratada": "cozinha-cinza-brilhante.png",
+      "original": "cozinha-cinza-brilhante-original.jpeg",
+      "alt": "Cozinha em L com armários cinza brilhante e tampo preto com cooktop"
+    }
+  ]
+}

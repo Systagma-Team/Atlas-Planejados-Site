@@ -1,0 +1,15 @@
+{
+  "titulo": "Balcão de atendimento com gavetas e nicho",
+  "categoria": "balcoes-de-caixa",
+  "descricao": "Balcão branco com tampo elevado, gavetas com chave e nichos de apoio.",
+  "destaque": false,
+  "publicado": true,
+  "data": "2026-09-05",
+  "fotos": [
+    {
+      "tratada": "balcao-atendimento-gavetas.png",
+      "original": "balcao-atendimento-gavetas-original.jpeg",
+      "alt": "Balcão de atendimento branco com nichos, duas gavetas com chave e tampo elevado"
+    }
+  ]
+}

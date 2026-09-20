@@ -1,0 +1,15 @@
+{
+  "titulo": "Torres expositoras",
+  "categoria": "lojas",
+  "descricao": "Duas torres brancas com prateleiras escalonadas, ideais para exposição de pequenos produtos.",
+  "destaque": false,
+  "publicado": true,
+  "data": "2026-09-06",
+  "fotos": [
+    {
+      "tratada": "torres-expositoras.png",
+      "original": "torres-expositoras-original.png",
+      "alt": "Duas torres brancas com prateleiras escalonadas"
+    }
+  ]
+}

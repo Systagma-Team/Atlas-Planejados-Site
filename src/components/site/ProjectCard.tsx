@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Picture } from "@/components/ui/Picture";
 import { Icon } from "@/components/ui/Icon";
-import type { ProjectCardData } from "@/server/queries/public";
+import type { ProjectCardData } from "@/lib/content";
 import styles from "./ProjectCard.module.css";
 
 type Props = {

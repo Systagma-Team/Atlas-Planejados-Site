@@ -17,12 +17,8 @@ export type MediaImage = {
   original?: { fileKey: string; width: number; height: number; blurDataUrl: string } | null;
 };
 
-/**
- * Endereço-base das fotos. Sem configuração, as fotos saem pela própria aplicação (/media).
- * Com Supabase Storage, defina NEXT_PUBLIC_MEDIA_BASE_URL como a URL pública do bucket, ex.:
- * https://<projeto>.supabase.co/storage/v1/object/public/projetos  (as fotos passam a ser servidas pelo CDN).
- */
-const MEDIA_BASE = (process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "/media").replace(/\/+$/, "");
+/** Endereço-base das fotos otimizadas (geradas em public/media por `npm run conteudo`). Respeita BASE_PATH, se houver. */
+const MEDIA_BASE = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/media`;
 
 export function mediaUrl(fileKey: string, width: number) {
   return `${MEDIA_BASE}/${fileKey}/${width}.webp`;

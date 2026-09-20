@@ -2,39 +2,25 @@
   "name": "atlas-planejados",
   "version": "1.0.0",
   "private": true,
-  "description": "Site institucional e painel administrativo da Atlas Planejados",
+  "description": "Site institucional da Atlas Planejados (estático; o conteúdo fica na pasta conteudo/)",
   "scripts": {
+    "conteudo": "tsx scripts/build-content.ts",
+    "conteudo:limpar": "tsx scripts/build-content.ts --limpar",
+    "novo:projeto": "tsx scripts/new-project.ts",
+    "predev": "npm run conteudo",
     "dev": "next dev",
-    "build": "prisma generate && next build",
-    "start": "next start",
+    "prebuild": "npm run conteudo",
+    "build": "next build",
+    "preview": "serve out -l 3001",
     "typecheck": "tsc --noEmit",
-    "db:migrate": "prisma migrate dev",
-    "db:deploy": "prisma migrate deploy",
-    "db:seed": "tsx --conditions=react-server prisma/seed.ts",
-    "db:reset": "prisma migrate reset --force",
-    "admin:create": "tsx scripts/create-admin.ts",
-    "db:local": "tsx scripts/local-postgres.ts",
-    "prod:migrate": "node scripts/with-env.mjs .env.supabase -- node node_modules/prisma/build/index.js migrate deploy",
-    "prod:admin": "node scripts/with-env.mjs .env.supabase -- node node_modules/tsx/dist/cli.mjs scripts/create-admin.ts",
-    "prod:seed": "node scripts/with-env.mjs .env.supabase -- node node_modules/tsx/dist/cli.mjs --conditions=react-server prisma/seed.ts",
-    "prod:check": "node scripts/with-env.mjs .env.supabase -- node node_modules/tsx/dist/cli.mjs --conditions=react-server scripts/check-prod.ts",
-    "prod:build": "node scripts/with-env.mjs .env.supabase -- node node_modules/next/dist/bin/next build",
-    "prod:start": "node scripts/with-env.mjs .env.supabase -- node node_modules/next/dist/bin/next start"
-  },
-  "prisma": {
-    "seed": "tsx --conditions=react-server prisma/seed.ts"
+    "postbuild": "tsx scripts/postbuild-export.ts"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.3.0",
     "@fontsource-variable/fraunces": "^5.3.0",
-    "@prisma/client": "^6.19.3",
-    "@supabase/supabase-js": "^2.116.0",
-    "bcryptjs": "^3.0.3",
-    "jose": "^6.2.12",
     "next": "^16.3.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "server-only": "^0.0.1",
     "sharp": "^0.35.4",
     "zod": "^4.6.5"
   },
@@ -42,8 +28,7 @@
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "embedded-postgres": "^18.4.0-beta.17",
-    "prisma": "^6.19.3",
+    "serve": "^14.2.6",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   }

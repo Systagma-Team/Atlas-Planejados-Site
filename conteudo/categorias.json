@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "cozinhas",
+    "nome": "Cozinhas",
+    "descricao": "Cozinhas planejadas sob medida.",
+    "ativa": true
+  },
+  {
+    "slug": "guarda-roupas",
+    "nome": "Guarda-roupas",
+    "descricao": "Guarda-roupas e closets planejados sob medida.",
+    "ativa": true
+  },
+  {
+    "slug": "lojas",
+    "nome": "Lojas",
+    "descricao": "Mobiliário planejado para lojas e espaços comerciais.",
+    "ativa": true
+  },
+  {
+    "slug": "balcoes-de-caixa",
+    "nome": "Balcões de caixa",
+    "descricao": "Balcões de atendimento e de caixa.",
+    "ativa": true
+  }
+]

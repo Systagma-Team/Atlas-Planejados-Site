@@ -1,124 +1,156 @@
-# Atlas Planejados — site institucional + painel administrativo
+# Atlas Planejados — site institucional
 
-Site público (portfólio de móveis planejados) e painel para o próprio cliente cadastrar projetos, organizar categorias e manter as informações de contato — sem mexer em código.
+Site de portfólio de móveis planejados. É **100% estático**: não há banco de dados, painel nem servidor. Todo o conteúdo
+(projetos, fotos, categorias, contatos) fica em arquivos na pasta [`conteudo/`](conteudo/) e é versionado junto com o
+código. Para mudar algo, edita-se um arquivo, envia-se para o GitHub e o site se atualiza — de graça, em qualquer
+hospedagem de arquivos estáticos.
 
-**Stack:** Next.js 16 (App Router, React 19) · Prisma 6 + Postgres (Supabase) · Supabase Storage · sharp (otimização de fotos) · jose + bcryptjs (sessão/senha) · zod (validação) · CSS puro com design tokens.
+Stack: Next.js 16 (App Router, `output: "export"`), React 19, CSS Modules com design tokens, sharp (fotos otimizadas
+no build) e zod (validação do conteúdo). Fontes locais (Fraunces e DM Sans).
 
-## Como rodar
+## Como editar o conteúdo
 
-```bash
-npm install
-npm run db:local            # (terminal 1) Postgres local sem Docker — deixe rodando
-npx prisma migrate deploy   # (terminal 2) cria as tabelas
-npm run db:seed             # cria o administrador + importa as fotos reais de src/projetos/
-npm run dev                 # http://localhost:3000   (painel: /admin)
-```
+Pré-requisito: Node 22 e `npm install` (uma vez).
 
-O `.env` já foi gerado localmente (`AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`). **Troque a senha no primeiro acesso** em *Painel → Minha conta*. Para criar/redefinir um administrador pela linha de comando: `npm run admin:create -- email@exemplo.com "nova senha"`.
-
-Produção: `npm run build && npm start`. Veja *Publicação* abaixo.
-
-## O que o cliente controla (tudo pelo painel)
-
-| Área | O que faz |
+| Quero… | Faça |
 |---|---|
-| **Projetos** | criar, editar, excluir (com confirmação), publicar/despublicar, destacar na Home, enviar várias fotos, arrastar para reordenar, escolher a capa, descrever cada foto |
-| **Categorias** | criar, renomear, mudar endereço e ordem, **ocultar/mostrar**. Excluir só é permitido se a categoria estiver vazia |
-| **Informações do site** | WhatsApp, telefone, e-mail, endereço, horário, Instagram, Facebook, mapa, texto da página *Sobre* |
-| **Minha conta** | nome, e-mail e senha |
+| Ver o site enquanto edito | `npm run dev` → http://localhost:3000 (recarrega ao salvar; se mexer em `conteudo/` com o servidor ligado, rode `npm run conteudo`) |
+| Conferir o conteúdo sem subir o site | `npm run conteudo` (avisa erros em português: arquivo, campo e o que corrigir) |
+| Adicionar um projeto | `npm run novo:projeto -- "Título do projeto" <categoria>` e siga as instruções que aparecem |
+| Gerar o site final | `npm run build` (cria a pasta `out/`) |
+| Ver o site final | `npm run preview` → http://localhost:3001 |
 
-Estados em linguagem simples: **Publicado**, **Rascunho**, **Oculto** (publicado, mas a categoria está oculta).
-
-Nada é fixo no código: as categorias, o portfólio, os canais de contato e a foto do hero vêm do banco. Canais de contato vazios simplesmente não aparecem no site.
-
-## Regras de negócio implementadas
-
-- Um projeto só aparece no site se estiver **publicado** e sua **categoria estiver ativa** (regra única em `src/server/queries/public.ts`).
-- Projeto sem foto não pode ser publicado; remover a última foto de um projeto publicado o devolve a rascunho.
-- Categoria com projetos **nunca** é apagada: além da regra no serviço, o banco usa `onDelete: Restrict`.
-- Mudar o título de um projeto/categoria **não** muda o endereço (URL) já divulgado.
-- Excluir um projeto apaga também os arquivos das fotos.
-
-## Arquitetura
+### Estrutura
 
 ```
-prisma/               schema, migração e seed (usa as fotos reais)
-src/
-  app/(site)/         site público  → /, /projetos, /projetos/[slug], /sobre, /contato
-  app/admin/          painel        → login + (panel)/ dashboard, projetos, categorias, configuracoes, conta
-  app/api/admin/      APIs de fotos (upload, reordenar, capa, alt, excluir) — sempre autenticadas
-  app/media/          entrega das fotos otimizadas (cache imutável de 1 ano)
-  proxy.ts            1ª barreira: /admin e /api/admin exigem sessão
-  server/             regras de negócio (services/), consultas do site (queries/), auth/, imagens
-  components/ui|site|admin/   componentes reutilizáveis
-  styles/             tokens.css (design system), base.css, admin.css
+conteudo/
+  site.json            contatos, endereço, mapa, texto "Sobre", endereço final do site
+  categorias.json      categorias e a ordem em que aparecem
+  projetos/<nome>/     uma pasta por projeto; o nome da pasta vira o endereço (/projetos/<nome>)
+    projeto.json
+    <fotos>
 ```
 
-Separação: **UI** (components) → **ações** (`actions.ts`, só validam sessão e chamam o serviço) → **serviços** (regras + Prisma). Nenhuma regra de negócio dentro de componente visual.
+### `site.json`
 
-### Segurança
-- Senha com bcrypt (custo 12); sessão em JWT assinado, cookie `httpOnly`, `SameSite=Lax`, `Secure` em produção, validade de 14 dias. Trocar a senha encerra as outras sessões.
-- Proteção em camadas: `proxy.ts` → guardas nas páginas/ações (`requireAdmin`) → guarda nas APIs (`requireAdminApi`, com checagem de origem contra CSRF). Login com limite de tentativas e mensagem única de erro.
-- Sem formulário de contato: o atendimento é por WhatsApp (dois números) e Instagram, o que elimina spam e a necessidade de e-mail/notificação. Painel `noindex` e fora do `robots`/sitemap. Nenhum link para o painel no site público.
+Só aparece no site o que estiver preenchido; campos vazios (`""`) ficam escondidos.
 
-### Fotos
-Cada upload passa por `sharp`: corrige a rotação do celular, **nunca amplia**, gera WebP em 480/960/1600/2400 px (só as menores que a original) e um placeholder borrado de ~1 KB. No site, `srcset`/`sizes` deixam o navegador escolher a versão certa; `width`/`height` reservam o espaço (CLS 0); tudo é `lazy` exceto a foto do hero. Fotos aparecem **inteiras** (proporção original); só cards/hero recortam, com `object-fit: cover`, nunca esticando.
+| Campo | O que é |
+|---|---|
+| `urlDoSite` | endereço final do site, ex. `https://www.atlasplanejados.com.br` (usado no Google e ao compartilhar). **Preencher antes de publicar.** |
+| `whatsapp`, `whatsapp2` | números com DDD. Com dois, o botão flutuante deixa escolher (principal / secundário) |
+| `telefone`, `email`, `endereco`, `horarioDeAtendimento` | exibidos em Contato e no rodapé |
+| `instagram`, `facebook` | endereço completo do perfil |
+| `mapaGoogle` | Google Maps → Compartilhar → Incorporar um mapa → copie só o endereço do `src="…"` |
+| `textoSobre` | lista de parágrafos da página "Sobre". Enquanto vazia, o site mostra um aviso de "conteúdo provisório" |
 
-### Imagens tratadas e foto original
-As imagens do portfólio foram tratadas digitalmente (organizadas com apoio de IA). **A imagem tratada é sempre a padrão**; a **foto original** da peça só aparece se o visitante escolher: cada imagem tem o botão **“Ver foto original”** e, na ampliação, uma alternância *Imagem tratada | Foto original* com legenda. Um aviso discreto informa isso na página do projeto e na lista de projetos. A original só é baixada depois que o visitante pede.
+### `categorias.json`
 
-- **No painel:** cada foto do projeto tem o campo **“Foto original”** (adicionar, trocar, remover). Sem original ligada, o botão não aparece.
-- **Nas pastas:** o par tem o **mesmo nome** nas duas pastas — `src/projetos/tratados/<categoria>/<nome>.png` ↔ `src/projetos/originais/<categoria>/<nome>.<ext>`. O `prisma/seed.ts` carrega os 29 pares (cada um vira uma imagem com sua original).
-- **No banco:** colunas `originalFileKey/originalWidth/originalHeight/originalBlurDataUrl` em `ProjectImage`; as versões otimizadas da original ficam no mesmo armazenamento das demais fotos.
-
-### Design system Atlas (`src/styles/tokens.css`)
-Sintetizado das duas referências em `design_system/`: o wireframe *Desktop 1920* (fundo `#F6F4F2`, marrom `#947458`, seções em faixas) e o kit *Formly* (canvas creme, areia `#D0BCA1`, pílulas, muito respiro). Adaptações: display em **Fraunces** (serifa editorial) + corpo em **DM Sans**; espresso `#1F1A16` para contraste; `#947458` só decorativo (dá 4,3:1 com branco), `#7C5F44`/`#6A4F36` onde há texto. Nenhuma imagem das referências foi usada.
-
-### SEO
-`title`/`description` por página e por projeto, Open Graph com a capa do projeto, `canonical`, `sitemap.xml` dinâmico (só projetos visíveis), `robots.txt`, URLs amigáveis (`/projetos/cozinha-em-u-com-armarios-em-cinza`), `alt` editável por foto, HTML semântico com um `<h1>` por página.
-
-## Publicação (Netlify + Supabase)
-
-O site roda em funções serverless (Netlify); os dados ficam no **Supabase** (Postgres + Storage). Nada depende de disco do servidor.
-
-**1. Supabase** (você cria; leva ~5 min) — novo projeto, região São Paulo. Em *Storage* crie o bucket **`projetos`** marcado como **Public**. Guarde: senha do banco, `Project URL`, chave `service_role` (secreta).
-
-**2. Criar as tabelas** (uma vez, do seu computador). Copie `.env.example` para `.env.supabase` (ignorado pelo Git), preencha com os valores do Supabase e rode:
-```bash
-npm run prod:check     # confere o ambiente e testa banco + Storage (sem mostrar segredos)
-npm run prod:migrate   # cria as tabelas e liga o RLS
-npm run prod:admin     # cria o administrador (ADMIN_EMAIL / ADMIN_PASSWORD do arquivo)
-npm run prod:seed      # OPCIONAL: carrega o portfólio de exemplo
-npm run prod:build && npm run prod:start   # (opcional) roda o site localmente apontando para o Supabase
+```json
+[
+  { "slug": "cozinhas", "nome": "Cozinhas", "descricao": "Cozinhas planejadas sob medida.", "ativa": true }
+]
 ```
 
-**3. Netlify** — importe o repositório (o `netlify.toml` já está pronto) e cadastre em *Environment variables* os valores de `.env.example` para produção: `DATABASE_URL`, `DIRECT_URL`, `STORAGE_DRIVER=supabase`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_STORAGE_BUCKET`, `NEXT_PUBLIC_MEDIA_BASE_URL` (lida no *build*: se mudar, faça novo deploy), `AUTH_SECRET` (gere uma nova!) e `SITE_URL`. O build consulta o banco, então `DATABASE_URL` precisa existir no ambiente de build.
+A ordem da lista é a ordem no site. `"ativa": false` esconde a categoria **e** os projetos dela (nada é apagado).
+Categorias sem projetos visíveis não aparecem.
 
-**4. Domínio e depois do primeiro deploy** — ligue o domínio, ajuste `SITE_URL`, entre em `/admin` com o administrador criado e **troque a senha**. Configure o ping (seção abaixo).
+### `projeto.json`
 
-Segurança no Supabase: todas as tabelas têm **RLS ligado sem políticas** (migração `enable_rls`), então a API REST automática do Supabase não expõe nenhum dado; o site acessa o banco pelo papel `postgres` via Prisma. A chave `service_role` só existe no servidor. O bucket é público **apenas para leitura**; só o servidor grava/apaga.
+```json
+{
+  "titulo": "Guarda-roupa com espelho iluminado",
+  "categoria": "guarda-roupas",
+  "descricao": "Resumo de uma ou duas frases (cartões e Google).",
+  "detalhes": ["Parágrafo opcional com mais detalhes.", "Outro parágrafo."],
+  "destaque": true,
+  "publicado": true,
+  "ano": 2026,
+  "data": "2026-09-19",
+  "fotos": [
+    {
+      "tratada": "espelho-aceso.png",
+      "original": "espelho-aceso-original.jpeg",
+      "alt": "Guarda-roupa com portas rosadas e espelho oval iluminado"
+    }
+  ]
+}
+```
 
-Alternativa sem serverless: um servidor Node com disco persistente (VPS) funciona com `STORAGE_DRIVER=local`, `npm run build && npm start`, HTTPS na frente e backup da pasta `data/`.
+- `categoria`: o `slug` de uma categoria existente.
+- `destaque`: mostra na página inicial (a foto do topo do site é o destaque mais recente).
+- `publicado: false`: rascunho — não aparece no site.
+- `data`: define a ordem (mais recente primeiro). `ano` e `detalhes` são opcionais.
+- `fotos`: a primeira é a capa. `tratada` é a que o site mostra; `original` (opcional) é a foto sem tratamento, que o
+  visitante só vê se escolher "Ver foto original". `alt` descreve a foto (acessibilidade e SEO) — descreva só o que
+  aparece na imagem.
+- Formatos aceitos: JPG, PNG, WebP. Não precisa reduzir o tamanho: o build gera as versões otimizadas.
 
-**Limites e cuidados serverless (já tratados):** fotos grandes são reduzidas no navegador antes do envio (as funções limitam o corpo da requisição) e enviadas uma por vez; o limitador de tentativas (login e `/api/health`) fica no banco. Confirme no primeiro deploy que o `proxy.ts` (Next 16) e o cache incremental funcionam no adaptador da Netlify — o painel também confere a sessão dentro de cada página e API, então a proteção não depende só do `proxy`.
+### Trocar ou remover coisas
 
-## Manter o banco ativo (ping automático)
+- **Trocar uma foto:** substitua o arquivo na pasta do projeto (mesmo nome) ou aponte outro nome em `fotos`.
+- **Excluir um projeto:** apague a pasta dele (ou use `"publicado": false` para só escondê-lo).
+- **Renomear o endereço de um projeto:** renomeie a pasta (o endereço antigo deixa de existir).
 
-Projetos gratuitos do Supabase são **pausados após cerca de 7 dias sem atividade** (confirme a regra atual na documentação). As páginas públicas ficam em cache e não consultam o banco a cada visita, então visitas comuns não bastam.
+## Publicar (gratuito)
 
-- `GET /api/health` faz uma leitura real no banco e responde `{"ok":true}` (200) ou 503 se o banco falhar. Não expõe dados, é `no-store`, tem limite de 30 chamadas/min por IP e está bloqueado no `robots.txt`.
-- `.github/workflows/keep-alive.yml` chama esse endereço às 09:17 e 21:17 UTC. Para ativar: suba o projeto para um repositório no GitHub e cadastre o segredo `HEALTH_URL` (ex.: `https://www.seudominio.com.br/api/health`). Alternativa sem GitHub: um agendador gratuito (ex.: cron-job.org) chamando o mesmo endereço 1–2 vezes por dia.
-- Se o agendador falhar, o GitHub avisa por e-mail; vale conferir de vez em quando se ele continua rodando. Um plano pago (Pro) dispensa o ping.
+O build gera a pasta `out/`, que pode ser hospedada em qualquer serviço de arquivos estáticos.
 
-## Conteúdo provisório (substituir com dados reais)
+### GitHub Pages (já configurado)
 
-Nada sobre a empresa foi inventado (sem endereço, telefone, redes, anos, números ou depoimentos). Os textos abaixo são **genéricos de posicionamento** e estão marcados com `CONTEÚDO PROVISÓRIO` no código:
+`.github/workflows/deploy.yml` publica a cada envio para a `main`. Configuração única:
+1. Repositório → **Settings → Pages → Source: GitHub Actions**.
+2. Repositório **público** (o GitHub Pages não publica repositório privado no plano gratuito).
+3. Site em subcaminho (`usuario.github.io/repositorio`)? Crie a variável `BASE_PATH` com `/repositorio`
+   (Settings → Secrets and variables → Actions → Variables). Com domínio próprio, deixe em branco.
 
-- `ValueProposition.tsx` — proposta de valor · `ProcessSteps.tsx` — etapas do processo · `Differentials.tsx` — diferenciais · `sobre/page.tsx` — propósito/filosofia/qualidade · `Intro.tsx` e `Hero.tsx` — frases de apresentação.
-- Página *Sobre*: o bloco **“Conteúdo provisório”** some sozinho quando o texto é preenchido em *Informações do site*.
-- Logo: marca tipográfica provisória (`components/site/Logo.tsx`).
-- **Portfólio inicial**: 29 pares (imagem tratada + foto original) em `src/projetos/`, agrupados em 18 projetos e 4 categorias (Cozinhas, Guarda-roupas, Lojas, Balcões de caixa). Títulos e resumos descrevem só o que se vê nas imagens e **não têm ano**. Edite/substitua pelo painel.
+### Cloudflare Pages / Netlify (aceitam repositório privado)
 
-## Testes feitos
+- Build command: `npm run build` · Output directory: `out` · variável `NODE_VERSION=22`.
+- O arquivo `public/_headers` já traz cabeçalhos de segurança e cache das fotos.
 
-Fluxo ponta a ponta no navegador (47 verificações): rotas e APIs bloqueadas sem login, login/logout/sessão, criar/duplicar categoria, criar projeto, validação preservando o que foi digitado, upload, arquivo inválido, reordenar/capa/alt persistindo, publicar/despublicar, ocultar categoria (some do site, permanece no painel), exclusão com confirmação (e arquivos removidos do disco), exclusão de categoria bloqueada quando há projetos. Acessibilidade (axe, WCAG 2.1 AA): 0 violações nas páginas públicas e no painel. Build de produção: LCP ≈ 0,2–0,6 s, CLS 0.
+### Domínio próprio
+
+Aponte o domínio no serviço escolhido e preencha `urlDoSite` em `conteudo/site.json`.
+
+## Como funciona por dentro
+
+1. `npm run conteudo` (roda sozinho antes de `dev` e `build`) lê `conteudo/`, valida com zod e gera:
+   - `public/media/<hash>/<largura>.webp` — fotos em 480/960/1600/2400 px + miniatura desfocada (com cache em `.cache/`);
+   - `src/generated/conteudo.json` — dados usados nas páginas.
+   Ambos são gerados (não vão para o Git).
+2. `next build` transforma tudo em HTML estático (`out/`), e `scripts/postbuild-export.ts` ajusta os arquivos de
+   pré-carregamento para funcionar em qualquer hospedagem.
+3. Leitura do conteúdo: `src/lib/content.ts`. Regra de visibilidade única: projeto publicado + categoria ativa + ao menos
+   uma foto.
+
+```
+src/app/            páginas (/, /projetos, /projetos/[slug], /projetos/categoria/[slug], /sobre, /contato)
+src/components/     site/ (seções) e ui/ (botão, ícones, imagem)
+src/styles/         tokens.css (cores, tipografia, espaçamento) · base.css
+scripts/            build-content.ts · new-project.ts · postbuild-export.ts
+conteudo/           todo o conteúdo editável
+```
+
+## Fotos tratadas × originais
+
+As imagens do portfólio foram tratadas digitalmente. O site mostra a tratada por padrão, avisa isso ao visitante e, em
+cada projeto, oferece "Ver foto original" (a original só aparece se o visitante escolher). Para isso, informe o campo
+`original` de cada foto.
+
+## Atendimento
+
+Sem formulário: o contato é por WhatsApp (botão flutuante em todas as páginas + página Contato) e Instagram.
+Isso evita spam e a necessidade de e-mail/servidor para receber mensagens.
+
+## Conteúdo provisório (não inventado)
+
+Nada de informações da empresa foi inventado. Enquanto estiverem vazios em `site.json`, ficam escondidos: telefone,
+e-mail, endereço, horário, mapa, Facebook e o texto "Sobre" (que mostra um aviso de conteúdo provisório).
+Títulos e descrições dos projetos descrevem apenas o que aparece nas fotos e podem ser ajustados.
+
+## Acessibilidade e desempenho
+
+Navegação por teclado com foco visível, link "pular para o conteúdo", contraste AA, `prefers-reduced-motion`,
+fotos responsivas (`srcset`) com carregamento sob demanda e reserva de espaço (sem saltos de layout). Testado com
+axe-core (0 violações nas páginas públicas).
