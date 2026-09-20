@@ -12,6 +12,7 @@
 
 /* Mobile: uma foto por linha, na largura toda. */
 .cell {
+  position: relative;
   grid-column: 1 / -1;
 }
 
@@ -169,5 +170,86 @@
 @keyframes fade {
   from {
     opacity: 0;
+  }
+}
+
+/* Botão "Ver foto original": discreto, sempre visível (também no toque), sobre o canto da foto. */
+.originalBtn {
+  position: absolute;
+  left: var(--space-3);
+  bottom: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tap-min);
+  padding: 0 16px;
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: var(--radius-pill);
+  background: rgb(20 15 10 / 62%);
+  color: #fff;
+  font-size: var(--text-small);
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out);
+}
+
+.originalBtn:hover {
+  background: #fff;
+  color: var(--espresso);
+}
+
+.originalBtn:focus-visible {
+  outline-color: #fff;
+}
+
+/* Lightbox: alternância Imagem tratada | Foto original */
+.switch {
+  position: absolute;
+  top: var(--space-4);
+  left: 50%;
+  z-index: 2;
+  display: inline-flex;
+  padding: 4px;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 8%);
+  transform: translateX(-50%);
+}
+
+.switch button {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: rgb(255 255 255 / 80%);
+  font-size: var(--text-small);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.switch button[aria-pressed="true"] {
+  background: #fff;
+  color: var(--espresso);
+}
+
+.switch button:focus-visible {
+  outline-color: #fff;
+}
+
+.caption {
+  color: #fff;
+}
+
+@media (max-width: 520px) {
+  .switch button {
+    padding: 0 12px;
   }
 }

@@ -108,13 +108,23 @@ export default async function EditProjectPage({ params, searchParams }: Props) {
         <div className="adm-card-head">
           <div>
             <h2 id="fotos">Fotos</h2>
-            <p className="adm-sub">A foto marcada como “Capa” é a que aparece nos cards e na página inicial.</p>
+            <p className="adm-sub">A foto marcada como “Capa” aparece nos cards e na página inicial. Se a imagem foi tratada, ligue a <strong>foto original</strong> da peça: no site a tratada aparece primeiro e o visitante pode conferir a original.</p>
           </div>
         </div>
         <ImageManager
           projectId={project.id}
           initialCoverId={project.coverImageId}
-          initialImages={project.images.map((i) => ({ id: i.id, fileKey: i.fileKey, alt: i.alt, width: i.width, height: i.height, blurDataUrl: i.blurDataUrl }))}
+          initialImages={project.images.map((i) => ({
+            id: i.id,
+            fileKey: i.fileKey,
+            alt: i.alt,
+            width: i.width,
+            height: i.height,
+            blurDataUrl: i.blurDataUrl,
+            originalFileKey: i.originalFileKey,
+            originalWidth: i.originalWidth,
+            originalHeight: i.originalHeight,
+          }))}
         />
       </section>
 

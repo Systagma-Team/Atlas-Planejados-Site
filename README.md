@@ -65,6 +65,13 @@ Separação: **UI** (components) → **ações** (`actions.ts`, só validam sess
 ### Fotos
 Cada upload passa por `sharp`: corrige a rotação do celular, **nunca amplia**, gera WebP em 480/960/1600/2400 px (só as menores que a original) e um placeholder borrado de ~1 KB. No site, `srcset`/`sizes` deixam o navegador escolher a versão certa; `width`/`height` reservam o espaço (CLS 0); tudo é `lazy` exceto a foto do hero. Fotos aparecem **inteiras** (proporção original); só cards/hero recortam, com `object-fit: cover`, nunca esticando.
 
+### Imagens tratadas e foto original
+As imagens do portfólio foram tratadas digitalmente (organizadas com apoio de IA). **A imagem tratada é sempre a padrão**; a **foto original** da peça só aparece se o visitante escolher: cada imagem tem o botão **“Ver foto original”** e, na ampliação, uma alternância *Imagem tratada | Foto original* com legenda. Um aviso discreto informa isso na página do projeto e na lista de projetos. A original só é baixada depois que o visitante pede.
+
+- **No painel:** cada foto do projeto tem o campo **“Foto original”** (adicionar, trocar, remover). Sem original ligada, o botão não aparece.
+- **Nas pastas:** o par tem o **mesmo nome** nas duas pastas — `src/projetos/tratados/<categoria>/<nome>.png` ↔ `src/projetos/originais/<categoria>/<nome>.<ext>`. O `prisma/seed.ts` carrega os 29 pares (cada um vira uma imagem com sua original).
+- **No banco:** colunas `originalFileKey/originalWidth/originalHeight/originalBlurDataUrl` em `ProjectImage`; as versões otimizadas da original ficam no mesmo armazenamento das demais fotos.
+
 ### Design system Atlas (`src/styles/tokens.css`)
 Sintetizado das duas referências em `design_system/`: o wireframe *Desktop 1920* (fundo `#F6F4F2`, marrom `#947458`, seções em faixas) e o kit *Formly* (canvas creme, areia `#D0BCA1`, pílulas, muito respiro). Adaptações: display em **Fraunces** (serifa editorial) + corpo em **DM Sans**; espresso `#1F1A16` para contraste; `#947458` só decorativo (dá 4,3:1 com branco), `#7C5F44`/`#6A4F36` onde há texto. Nenhuma imagem das referências foi usada.
 
@@ -111,7 +118,7 @@ Nada sobre a empresa foi inventado (sem endereço, telefone, redes, anos, númer
 - `ValueProposition.tsx` — proposta de valor · `ProcessSteps.tsx` — etapas do processo · `Differentials.tsx` — diferenciais · `sobre/page.tsx` — propósito/filosofia/qualidade · `Intro.tsx` e `Hero.tsx` — frases de apresentação.
 - Página *Sobre*: o bloco **“Conteúdo provisório”** some sozinho quando o texto é preenchido em *Informações do site*.
 - Logo: marca tipográfica provisória (`components/site/Logo.tsx`).
-- **Portfólio inicial**: as 22 fotos de `src/projetos/` viraram 12 projetos em 3 categorias (Cozinhas, Lojas, Balcões de caixa — nomes tirados das pastas). Títulos e resumos descrevem só o que se vê nas fotos e **não têm ano**. Edite/substitua pelo painel quando tiver as fotos tratadas.
+- **Portfólio inicial**: 29 pares (imagem tratada + foto original) em `src/projetos/`, agrupados em 18 projetos e 4 categorias (Cozinhas, Guarda-roupas, Lojas, Balcões de caixa). Títulos e resumos descrevem só o que se vê nas imagens e **não têm ano**. Edite/substitua pelo painel.
 
 ## Testes feitos
 

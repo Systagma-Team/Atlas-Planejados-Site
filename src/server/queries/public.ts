@@ -10,6 +10,8 @@ import type { MediaImage } from "@/lib/media";
 export const visibleProject = { published: true, category: { isActive: true } } satisfies Prisma.ProjectWhereInput;
 
 const imageSelect = { fileKey: true, width: true, height: true, alt: true, blurDataUrl: true } as const;
+// Galeria da página do projeto: inclui a foto original ligada a cada imagem.
+const galleryImageSelect = { ...imageSelect, originalFileKey: true, originalWidth: true, originalHeight: true, originalBlurDataUrl: true } as const;
 
 const cardSelect = {
   id: true,
@@ -119,15 +121,26 @@ export async function getPublishedProjectBySlug(slug: string) {
       updatedAt: true,
       category: { select: { id: true, name: true, slug: true } },
       coverImage: { select: imageSelect },
-      images: { select: imageSelect, orderBy: { displayOrder: "asc" } },
+      images: { select: galleryImageSelect, orderBy: { displayOrder: "asc" } },
     },
   });
   if (!project || project.images.length === 0) return null;
   const cover = project.coverImage ?? project.images[0];
+  const images: MediaImage[] = project.images.map((i) => ({
+    fileKey: i.fileKey,
+    width: i.width,
+    height: i.height,
+    blurDataUrl: i.blurDataUrl,
+    alt: i.alt || project.title,
+    original:
+      i.originalFileKey && i.originalWidth && i.originalHeight
+        ? { fileKey: i.originalFileKey, width: i.originalWidth, height: i.originalHeight, blurDataUrl: i.originalBlurDataUrl }
+        : null,
+  }));
   return {
     ...project,
     cover: { ...cover, alt: cover.alt || project.title },
-    images: project.images.map((i) => ({ ...i, alt: i.alt || project.title })) as MediaImage[],
+    images,
   };
 }
 
@@ -158,4 +171,10 @@ export async function getSitemapEntries() {
     getActiveCategories(),
   ]);
   return { projects, categories };
+}
+
+/** Há alguma foto original ligada a um projeto visível? (controla o aviso "imagens tratadas" no site) */
+export async function hasOriginalPhotos() {
+  const count = await db.projectImage.count({ where: { originalFileKey: { not: null }, project: visibleProject } });
+  return count > 0;
 }

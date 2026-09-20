@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getActiveCategories, getPublishedProjects } from "@/server/queries/public";
+import { getActiveCategories, getPublishedProjects, hasOriginalPhotos } from "@/server/queries/public";
 import { PageHeader } from "@/components/site/PageHeader";
 import { ProjectCard } from "@/components/site/ProjectCard";
 import { Reveal } from "@/components/ui/Reveal";
@@ -30,7 +30,7 @@ export default async function ProjectsPage({ searchParams }: Props) {
   const { categoria } = await searchParams;
   const categories = await getActiveCategories();
   const current = categories.find((c) => c.slug === categoria);
-  const projects = await getPublishedProjects(current?.slug);
+  const [projects, showTreatedNote] = await Promise.all([getPublishedProjects(current?.slug), hasOriginalPhotos()]);
 
   return (
     <>
@@ -54,6 +54,12 @@ export default async function ProjectsPage({ searchParams }: Props) {
                 </Link>
               ))}
             </nav>
+          ) : null}
+
+          {showTreatedNote && projects.length > 0 ? (
+            <p className={styles.note} role="note">
+              As imagens foram tratadas digitalmente. Em cada projeto você pode ver a foto original da peça.
+            </p>
           ) : null}
 
           {projects.length > 0 ? (

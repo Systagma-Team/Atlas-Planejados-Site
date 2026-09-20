@@ -8,7 +8,17 @@ import { useToast } from "@/components/admin/Toast";
 import { mediaThumb } from "@/lib/media";
 import { prepareForUpload } from "@/lib/prepareUpload";
 
-export type GalleryImage = { id: string; fileKey: string; alt: string; width: number; height: number; blurDataUrl: string };
+export type GalleryImage = {
+  id: string;
+  fileKey: string;
+  alt: string;
+  width: number;
+  height: number;
+  blurDataUrl: string;
+  originalFileKey: string | null;
+  originalWidth: number | null;
+  originalHeight: number | null;
+};
 type Pending = { tempId: string; name: string; preview: string; error?: string };
 
 const MAX_BYTES = 15 * 1024 * 1024;
@@ -38,6 +48,7 @@ export function ImageManager({ projectId, initialImages, initialCoverId }: { pro
   const [targetId, setTargetId] = useState<string | null>(null);
   const [removing, setRemoving] = useState<GalleryImage | null>(null);
   const [removeBusy, setRemoveBusy] = useState(false);
+  const [originalBusy, setOriginalBusy] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const base = `/api/admin/projects/${projectId}/images`;
 
@@ -140,6 +151,41 @@ export function ImageManager({ projectId, initialImages, initialCoverId }: { pro
       setImages((list) => list.map((i) => (i.id === image.id ? { ...i, alt: value.trim() } : i)));
       toast("Descrição da foto salva.");
     }
+  }
+
+  /* --------------------- Foto original (sem tratamento) --------------------- */
+  async function uploadOriginal(image: GalleryImage, file: File) {
+    if (!file.type.startsWith("image/") && !/\.(jpe?g|png|webp|avif)$/i.test(file.name)) {
+      toast("Escolha um arquivo de imagem (JPG, PNG ou WebP).", "error");
+      return;
+    }
+    if (file.size > MAX_BYTES) {
+      toast("A foto é muito grande (limite de 15 MB).", "error");
+      return;
+    }
+    setOriginalBusy(image.id);
+    const body = new FormData();
+    body.append("file", await prepareForUpload(file));
+    const res = await api<{ originalFileKey: string; originalWidth: number; originalHeight: number }>(`${base}/${image.id}/original`, { method: "POST", body });
+    setOriginalBusy(null);
+    if (!res.ok) {
+      toast(res.message, "error");
+      return;
+    }
+    setImages((list) => list.map((i) => (i.id === image.id ? { ...i, ...res.data } : i)));
+    toast("Foto original ligada a esta imagem.");
+  }
+
+  async function removeOriginal(image: GalleryImage) {
+    setOriginalBusy(image.id);
+    const res = await api(`${base}/${image.id}/original`, { method: "DELETE" });
+    setOriginalBusy(null);
+    if (!res.ok) {
+      toast(res.message, "error");
+      return;
+    }
+    setImages((list) => list.map((i) => (i.id === image.id ? { ...i, originalFileKey: null, originalWidth: null, originalHeight: null } : i)));
+    toast("Foto original removida.");
   }
 
   /* ------------------------------ Remover ------------------------------ */
@@ -259,6 +305,50 @@ export function ImageManager({ projectId, initialImages, initialCoverId }: { pro
                   placeholder="Ex.: Cozinha com armários cinza"
                   onBlur={(e) => void saveAlt(image, e.currentTarget.value)}
                 />
+
+                <div className="adm-orig">
+                  <span className="adm-help" style={{ fontSize: "0.8125rem" }}>
+                    Foto original <span>(sem tratamento; o visitante escolhe se quer ver)</span>
+                  </span>
+                  {image.originalFileKey && image.originalWidth ? (
+                    <div className="adm-orig-row">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={mediaThumb({ fileKey: image.originalFileKey, width: image.originalWidth })} alt={`Foto original da foto ${index + 1}`} width={56} height={42} />
+                      <label className="adm-btn adm-btn--sm" style={{ cursor: originalBusy === image.id ? "wait" : "pointer" }}>
+                        {originalBusy === image.id ? "Enviando…" : "Trocar"}
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,image/avif"
+                          hidden
+                          disabled={originalBusy === image.id}
+                          onChange={(e) => {
+                            const f = e.target.files?.[0];
+                            e.target.value = "";
+                            if (f) void uploadOriginal(image, f);
+                          }}
+                        />
+                      </label>
+                      <button type="button" className="adm-btn adm-btn--sm" onClick={() => removeOriginal(image)} disabled={originalBusy === image.id}>
+                        Remover
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="adm-btn adm-btn--sm" style={{ cursor: originalBusy === image.id ? "wait" : "pointer" }}>
+                      <Icon name="plus" size={16} /> {originalBusy === image.id ? "Enviando…" : "Adicionar foto original"}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/avif"
+                        hidden
+                        disabled={originalBusy === image.id}
+                        onChange={(e) => {
+                          const f = e.target.files?.[0];
+                          e.target.value = "";
+                          if (f) void uploadOriginal(image, f);
+                        }}
+                      />
+                    </label>
+                  )}
+                </div>
 
                 <div className="adm-tile-tools">
                   <button type="button" className="adm-btn adm-btn--sm" onClick={() => makeCover(image.id)} disabled={coverId === image.id}>

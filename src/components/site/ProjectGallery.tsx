@@ -7,6 +7,7 @@ import { mediaSrcSet, mediaUrl, variantWidths, type MediaImage } from "@/lib/med
 import styles from "./ProjectGallery.module.css";
 
 type Slot = { image: MediaImage; index: number; span: number; start?: number };
+type View = "tratada" | "original";
 
 /**
  * Distribui as fotos em uma grade de 12 colunas respeitando a proporção real de cada uma:
@@ -37,18 +38,24 @@ function arrange(images: MediaImage[]): Slot[] {
 
 export function ProjectGallery({ images, title }: { images: MediaImage[]; title: string }) {
   const [current, setCurrent] = useState<number | null>(null);
+  // A imagem tratada é sempre a padrão; a original só aparece quando a pessoa escolhe vê-la.
+  const [view, setView] = useState<View>("tratada");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
   const slots = arrange(images);
 
-  const open = (index: number, el: HTMLElement) => {
+  const open = (index: number, el: HTMLElement, initialView: View = "tratada") => {
     openerRef.current = el;
+    setView(initialView);
     setCurrent(index);
   };
 
   const close = useCallback(() => setCurrent(null), []);
   const go = useCallback(
-    (delta: number) => setCurrent((c) => (c === null ? c : (c + delta + images.length) % images.length)),
+    (delta: number) => {
+      setView("tratada");
+      setCurrent((c) => (c === null ? c : (c + delta + images.length) % images.length));
+    },
     [images.length],
   );
 
@@ -82,7 +89,9 @@ export function ProjectGallery({ images, title }: { images: MediaImage[]; title:
   }, [current, go]);
 
   const active = current !== null ? images[current] : null;
-  const largest = active ? variantWidths(active.width).at(-1)! : 0;
+  const showingOriginal = !!active?.original && view === "original";
+  const shown = active ? (showingOriginal ? active.original! : active) : null;
+  const largest = shown ? variantWidths(shown.width).at(-1)! : 0;
 
   return (
     <>
@@ -109,28 +118,53 @@ export function ProjectGallery({ images, title }: { images: MediaImage[]; title:
                 <Icon name="plus" size={20} />
               </span>
             </button>
+
+            {slot.image.original ? (
+              <button
+                type="button"
+                className={styles.originalBtn}
+                onClick={(e) => open(slot.index, e.currentTarget, "original")}
+                aria-label={`Ver a foto original de: ${slot.image.alt}`}
+              >
+                <Icon name="image" size={16} />
+                Ver foto original
+              </button>
+            ) : null}
           </li>
         ))}
       </ul>
 
       <dialog ref={dialogRef} className={styles.dialog} aria-label={`Fotos do projeto ${title}`} onClose={onClosed} onClick={(e) => e.target === e.currentTarget && close()}>
-        {active ? (
+        {active && shown ? (
           <div className={styles.stage}>
             <img
-              key={active.fileKey}
+              key={`${shown.fileKey}`}
               className={styles.big}
-              src={mediaUrl(active.fileKey, largest)}
-              srcSet={mediaSrcSet(active)}
+              src={mediaUrl(shown.fileKey, largest)}
+              srcSet={mediaSrcSet(shown)}
               sizes="100vw"
-              alt={active.alt}
-              width={active.width}
-              height={active.height}
+              alt={showingOriginal ? `${active.alt} (foto original, sem tratamento)` : active.alt}
+              width={shown.width}
+              height={shown.height}
             />
             <p className={styles.counter} aria-live="polite">
               {(current ?? 0) + 1} / {images.length}
+              {active.original ? <span className={styles.caption}> · {showingOriginal ? "Foto original, sem tratamento" : "Imagem tratada digitalmente"}</span> : null}
             </p>
           </div>
         ) : null}
+
+        {active?.original ? (
+          <div role="group" aria-label="Versão da imagem" className={styles.switch}>
+            <button type="button" aria-pressed={!showingOriginal} onClick={() => setView("tratada")}>
+              Imagem tratada
+            </button>
+            <button type="button" aria-pressed={showingOriginal} onClick={() => setView("original")}>
+              Foto original
+            </button>
+          </div>
+        ) : null}
+
         <button type="button" className={`${styles.ctl} ${styles.close}`} onClick={close} aria-label="Fechar">
           <Icon name="close" size={24} />
         </button>

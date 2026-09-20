@@ -956,3 +956,26 @@
     align-items: center;
   }
 }
+
+/* Foto original (sem tratamento) ligada a uma imagem do projeto */
+.adm-orig {
+  display: grid;
+  gap: 6px;
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--adm-line);
+}
+
+.adm-orig-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.adm-orig-row img {
+  width: 56px;
+  height: 42px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: var(--adm-bg);
+}

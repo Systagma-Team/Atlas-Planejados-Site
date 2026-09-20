@@ -58,6 +58,7 @@ export default async function ProjectPage({ params }: Props) {
 
   const related = await getRelatedProjects(project.id, project.category.id, 3);
   const details = paragraphs(project.details);
+  const hasOriginals = project.images.some((i) => i.original);
 
   return (
     <article>
@@ -101,6 +102,14 @@ export default async function ProjectPage({ params }: Props) {
 
       <section className={styles.gallery} aria-label="Fotos do projeto">
         <div className="container">
+          {hasOriginals ? (
+            <p className={styles.note} role="note">
+              <Icon name="image" size={18} />
+              <span>
+                As imagens deste projeto foram tratadas digitalmente. Para conferir a peça como ela é, use <strong>“Ver foto original”</strong> em cada imagem.
+              </span>
+            </p>
+          ) : null}
           <ProjectGallery images={project.images} title={project.title} />
         </div>
       </section>

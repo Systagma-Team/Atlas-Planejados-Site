@@ -151,10 +151,10 @@ export async function setProjectFeatured(id: string, featured: boolean): Promise
 }
 
 export async function deleteProject(id: string): Promise<ActionResult> {
-  const project = await db.project.findUnique({ where: { id }, select: { images: { select: { fileKey: true } } } });
+  const project = await db.project.findUnique({ where: { id }, select: { images: { select: { fileKey: true, originalFileKey: true } } } });
   if (!project) return success("Projeto já havia sido excluído.");
   await db.project.delete({ where: { id } });
-  await Promise.all(project.images.map((i) => removeStoredImage(i.fileKey)));
+  await Promise.all(project.images.flatMap((i) => [removeStoredImage(i.fileKey), i.originalFileKey ? removeStoredImage(i.originalFileKey) : Promise.resolve()]));
   return success("Projeto excluído.");
 }
 
@@ -189,7 +189,7 @@ export async function addProjectImages(projectId: string, files: { buffer: Buffe
 }
 
 export async function deleteProjectImage(projectId: string, imageId: string): Promise<ActionResult> {
-  const image = await db.projectImage.findFirst({ where: { id: imageId, projectId }, select: { id: true, fileKey: true } });
+  const image = await db.projectImage.findFirst({ where: { id: imageId, projectId }, select: { id: true, fileKey: true, originalFileKey: true } });
   if (!image) return success();
   const project = await db.project.findUnique({ where: { id: projectId }, select: { coverImageId: true, published: true } });
   const remaining = await db.projectImage.findMany({
@@ -208,6 +208,7 @@ export async function deleteProjectImage(projectId: string, imageId: string): Pr
     if (Object.keys(data).length) await tx.project.update({ where: { id: projectId }, data });
   });
   await removeStoredImage(image.fileKey);
+  if (image.originalFileKey) await removeStoredImage(image.originalFileKey);
   return success(backToDraft ? "Foto removida. Sem fotos, o projeto voltou para rascunho." : "Foto removida.");
 }
 
@@ -233,4 +234,40 @@ export async function updateImageAlt(projectId: string, imageId: string, alt: st
   const res = await db.projectImage.updateMany({ where: { id: imageId, projectId }, data: { alt: clean } });
   if (res.count === 0) return fail("Foto não encontrada.");
   return success("Descrição da foto salva.");
+}
+
+/* ------------------------- Foto original (sem tratamento) ------------------------- */
+
+/**
+ * Liga a foto ORIGINAL da peça a uma imagem do projeto. O site mostra a imagem tratada por padrão e só
+ * revela a original quando o visitante escolher "Ver foto original". Substitui a anterior, se houver.
+ */
+export async function setImageOriginal(projectId: string, imageId: string, buffer: Buffer) {
+  const image = await db.projectImage.findFirst({ where: { id: imageId, projectId }, select: { id: true, originalFileKey: true } });
+  if (!image) throw new ImageError("Foto não encontrada.");
+
+  const stored = await storeImage(buffer);
+  try {
+    await db.projectImage.update({
+      where: { id: imageId },
+      data: { originalFileKey: stored.fileKey, originalWidth: stored.width, originalHeight: stored.height, originalBlurDataUrl: stored.blurDataUrl },
+    });
+  } catch (e) {
+    await removeStoredImage(stored.fileKey);
+    throw e;
+  }
+  if (image.originalFileKey) await removeStoredImage(image.originalFileKey);
+  return { originalFileKey: stored.fileKey, originalWidth: stored.width, originalHeight: stored.height };
+}
+
+export async function removeImageOriginal(projectId: string, imageId: string): Promise<ActionResult> {
+  const image = await db.projectImage.findFirst({ where: { id: imageId, projectId }, select: { originalFileKey: true } });
+  if (!image) return fail("Foto não encontrada.");
+  if (!image.originalFileKey) return success();
+  await db.projectImage.update({
+    where: { id: imageId },
+    data: { originalFileKey: null, originalWidth: null, originalHeight: null, originalBlurDataUrl: "" },
+  });
+  await removeStoredImage(image.originalFileKey);
+  return success("Foto original removida.");
 }

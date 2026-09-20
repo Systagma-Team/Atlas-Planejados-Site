@@ -13,6 +13,8 @@ export type MediaImage = {
   height: number;
   alt: string;
   blurDataUrl: string;
+  /** Foto original (sem tratamento) da mesma peça. A imagem principal é a tratada; a original só aparece se o visitante pedir. */
+  original?: { fileKey: string; width: number; height: number; blurDataUrl: string } | null;
 };
 
 /**

@@ -81,6 +81,12 @@ model ProjectImage {
   height       Int
   // Miniatura minúscula em base64, usada como placeholder enquanto a foto carrega.
   blurDataUrl  String    @default("")
+  // Foto ORIGINAL (sem tratamento) da mesma peça. Opcional. Quando existe, o site mostra a imagem tratada
+  // por padrão e oferece "Ver foto original" ao visitante.
+  originalFileKey     String? @unique
+  originalWidth       Int?
+  originalHeight      Int?
+  originalBlurDataUrl String  @default("")
   displayOrder Int       @default(0)
   createdAt    DateTime  @default(now())
   coverOf      Project[] @relation("ProjectCover")
