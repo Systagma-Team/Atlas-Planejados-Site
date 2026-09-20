@@ -2,7 +2,7 @@
   position: fixed;
   right: max(16px, env(safe-area-inset-right));
   bottom: max(16px, env(safe-area-inset-bottom));
-  z-index: 60;
+  z-index: 40; /* abaixo do cabeçalho/menu móvel (--z-header: 50), para não cobrir o menu aberto */
   display: grid;
   justify-items: end;
   gap: var(--space-3);

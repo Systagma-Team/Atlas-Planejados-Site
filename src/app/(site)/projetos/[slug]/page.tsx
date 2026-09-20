@@ -9,7 +9,8 @@ import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
 import { paragraphs } from "@/lib/format";
 import { mediaUrl, variantWidths } from "@/lib/media";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, whatsappOptions } from "@/lib/site";
+import { getSettings } from "@/server/services/settings";
 import styles from "./projeto.module.css";
 
 export const revalidate = 3600;
@@ -56,7 +57,9 @@ export default async function ProjectPage({ params }: Props) {
   const project = await getPublishedProjectBySlug(slug);
   if (!project) notFound();
 
-  const related = await getRelatedProjects(project.id, project.category.id, 3);
+  const [related, settings] = await Promise.all([getRelatedProjects(project.id, project.category.id, 3), getSettings()]);
+  // Botão de orçamento: abre o WhatsApp principal já citando o projeto. Sem WhatsApp cadastrado, cai na página de contato.
+  const quote = whatsappOptions(settings, `Olá! Tenho interesse em um projeto como “${project.title}”.`)[0];
   const details = paragraphs(project.details);
   const hasOriginals = project.images.some((i) => i.original);
 
@@ -134,9 +137,15 @@ export default async function ProjectPage({ params }: Props) {
           <h2 id="quero-title" className={`display ${styles.ctaTitle}`}>
             Quer um projeto assim para o seu espaço?
           </h2>
-          <Button href={`/contato?projeto=${project.slug}`} icon="arrow">
-            Solicitar orçamento
-          </Button>
+          {quote ? (
+            <Button href={quote.href} external icon="whatsapp">
+              Pedir orçamento no WhatsApp
+            </Button>
+          ) : (
+            <Button href={`/contato?projeto=${project.slug}`} icon="arrow">
+              Solicitar orçamento
+            </Button>
+          )}
         </div>
       </section>
 

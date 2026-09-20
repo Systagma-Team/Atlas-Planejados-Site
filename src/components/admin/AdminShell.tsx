@@ -9,7 +9,6 @@ import { ToastProvider } from "./Toast";
 type Props = {
   children: ReactNode;
   adminName: string;
-  unreadMessages: number;
   logout: () => Promise<void>;
 };
 
@@ -17,11 +16,10 @@ const NAV: { href: string; label: string; icon: IconName; exact?: boolean }[] = 
   { href: "/admin", label: "Painel", icon: "home", exact: true },
   { href: "/admin/projetos", label: "Projetos", icon: "image" },
   { href: "/admin/categorias", label: "Categorias", icon: "folder" },
-  { href: "/admin/mensagens", label: "Mensagens", icon: "inbox" },
   { href: "/admin/configuracoes", label: "Informações do site", icon: "settings" },
 ];
 
-export function AdminShell({ children, adminName, unreadMessages, logout }: Props) {
+export function AdminShell({ children, adminName, logout }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -36,11 +34,6 @@ export function AdminShell({ children, adminName, unreadMessages, logout }: Prop
             <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined}>
               <Icon name={item.icon} size={20} />
               {item.label}
-              {item.href === "/admin/mensagens" && unreadMessages > 0 ? (
-                <span className="adm-count" aria-label={`${unreadMessages} não lidas`}>
-                  {unreadMessages}
-                </span>
-              ) : null}
             </Link>
           );
         })}

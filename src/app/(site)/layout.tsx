@@ -35,8 +35,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const [settings, categories] = await Promise.all([getSettings(), getActiveCategories()]);
 
   return (
-    <html lang="pt-BR" className={`${fraunces.variable} ${dmSans.variable}`}>
-      <body>
+    <html lang="pt-BR" suppressHydrationWarning className={`${fraunces.variable} ${dmSans.variable}`}>
+      <body suppressHydrationWarning>
         <a href="#conteudo" className="skip-link">
           Ir para o conteúdo
         </a>

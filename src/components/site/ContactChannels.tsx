@@ -6,9 +6,9 @@ import styles from "./ContactChannels.module.css";
 type Channel = { key: string; icon: IconName; label: string; value: string; href?: string; external?: boolean };
 
 /** Lista apenas os canais que o administrador já preencheu. Nada é exibido por padrão. */
-export function getChannels(s: SiteSettings): Channel[] {
+export function getChannels(s: SiteSettings, opts: { withoutWhatsapp?: boolean } = {}): Channel[] {
   const channels: (Channel | null)[] = [
-    ...whatsappOptions(s).map((w): Channel => ({ key: w.key, icon: "whatsapp", label: w.label === "WhatsApp" ? "WhatsApp" : `WhatsApp · ${w.label}`, value: w.number, href: w.href, external: true })),
+    ...(opts.withoutWhatsapp ? [] : whatsappOptions(s)).map((w): Channel => ({ key: w.key, icon: "whatsapp", label: w.label === "WhatsApp" ? "WhatsApp" : `WhatsApp · ${w.label}`, value: w.number, href: w.href, external: true })),
     s.phone ? { key: "phone", icon: "phone", label: "Telefone", value: s.phone, href: telLink(s.phone) ?? undefined } : null,
     s.email ? { key: "email", icon: "mail", label: "E-mail", value: s.email, href: `mailto:${s.email}` } : null,
     s.address ? { key: "address", icon: "pin", label: "Endereço", value: s.address } : null,
@@ -24,9 +24,9 @@ export function getSocials(s: SiteSettings) {
   ].filter((c): c is NonNullable<typeof c> => c !== null);
 }
 
-export function ContactChannels({ settings, tone = "light" }: { settings: SiteSettings; tone?: "light" | "dark" }) {
-  const channels = getChannels(settings);
-  const socials = getSocials(settings);
+export function ContactChannels({ settings, tone = "light", withoutWhatsapp = false, withoutSocials = false }: { settings: SiteSettings; tone?: "light" | "dark"; withoutWhatsapp?: boolean; withoutSocials?: boolean }) {
+  const channels = getChannels(settings, { withoutWhatsapp });
+  const socials = withoutSocials ? [] : getSocials(settings);
   if (channels.length === 0 && socials.length === 0) return null;
 
   return (

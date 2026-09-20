@@ -94,20 +94,7 @@ model ProjectImage {
   @@index([projectId, displayOrder])
 }
 
-// Pedidos de orçamento enviados pelo formulário do site.
-model Lead {
-  id        String    @id @default(cuid())
-  name      String
-  phone     String    @default("")
-  email     String    @default("")
-  message   String
-  readAt    DateTime?
-  createdAt DateTime  @default(now())
-
-  @@index([readAt, createdAt])
-}
-
-// Contadores do limitador de tentativas (login, contato, health). Fica no banco porque em hospedagem
+// Contadores do limitador de tentativas (login, health). Fica no banco porque em hospedagem
 // serverless a memória não é compartilhada entre execuções.
 model RateLimit {
   key     String   @id

@@ -4,6 +4,7 @@
 
 .grid {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-12);
   padding-top: var(--space-8);
   border-top: 1px solid var(--color-border-strong);
@@ -17,30 +18,37 @@
   line-height: 1.15;
 }
 
-.infoCol {
+.primary {
   display: grid;
-  gap: var(--space-10);
-  align-content: start;
-}
-
-.whatsapp {
-  display: grid;
+  min-width: 0;
   gap: var(--space-4);
   justify-items: start;
-  padding: var(--space-8);
+  align-content: start;
+  padding: var(--space-6) var(--space-6) var(--space-8);
   border-radius: var(--radius-lg);
   background: var(--color-surface-strong);
   color: var(--color-text-muted);
 }
 
-.whatsapp .colTitle {
+.primary .colTitle {
   margin-bottom: 0;
   color: var(--color-text);
 }
 
+.buttons {
+  display: flex;
+  max-width: 100%;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.others {
+  align-content: start;
+}
+
 @media (min-width: 900px) {
   .grid {
-    grid-template-columns: 1.3fr 1fr;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
     gap: var(--space-20);
   }
 }
@@ -55,10 +63,4 @@
   border: 0;
   border-radius: var(--radius-lg);
   filter: saturate(0.85);
-}
-
-.whatsappButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
 }

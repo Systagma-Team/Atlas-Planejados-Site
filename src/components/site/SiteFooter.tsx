@@ -46,9 +46,9 @@ export function SiteFooter({ settings, categories }: Props) {
         <div className={styles.col}>
           <h2 className={styles.heading}>Fale com a Atlas</h2>
           <ContactChannels settings={settings} tone="dark" />
-          {!settings.whatsapp && !settings.phone && !settings.email && !settings.address ? (
+          {!settings.whatsapp && !settings.whatsapp2 && !settings.instagram && !settings.facebook && !settings.phone && !settings.email && !settings.address ? (
             <p className={styles.muted}>
-              <Link href="/contato" className={styles.inlineLink}>Envie uma mensagem</Link> pelo formulário de orçamento.
+              Veja <Link href="/contato" className={styles.inlineLink}>como falar com a gente</Link>.
             </p>
           ) : null}
         </div>

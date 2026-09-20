@@ -13,8 +13,8 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${fraunces.variable} ${dmSans.variable}`}>
-      <body className="admin">{children}</body>
+    <html lang="pt-BR" suppressHydrationWarning className={`${fraunces.variable} ${dmSans.variable}`}>
+      <body className="admin" suppressHydrationWarning>{children}</body>
     </html>
   );
 }

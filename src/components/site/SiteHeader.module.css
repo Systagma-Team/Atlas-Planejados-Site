@@ -17,9 +17,18 @@
 /* Após rolar (ou em páginas internas): fundo do papel, texto escuro. */
 .solid {
   color: var(--color-text);
+  box-shadow: 0 1px 0 var(--color-border);
+}
+
+/* O fundo (e o desfoque) fica num pseudo-elemento: backdrop-filter no próprio header faria
+   dele o bloco de contenção do menu móvel (position: fixed), que encolheria para a altura da barra. */
+.solid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: color-mix(in srgb, var(--paper) 92%, transparent);
   backdrop-filter: blur(14px) saturate(1.1);
-  box-shadow: 0 1px 0 var(--color-border);
 }
 
 .bar {

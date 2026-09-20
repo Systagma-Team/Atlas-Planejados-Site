@@ -24,7 +24,6 @@ Produção: `npm run build && npm start`. Veja *Publicação* abaixo.
 |---|---|
 | **Projetos** | criar, editar, excluir (com confirmação), publicar/despublicar, destacar na Home, enviar várias fotos, arrastar para reordenar, escolher a capa, descrever cada foto |
 | **Categorias** | criar, renomear, mudar endereço e ordem, **ocultar/mostrar**. Excluir só é permitido se a categoria estiver vazia |
-| **Mensagens** | pedidos de orçamento enviados pelo formulário do site |
 | **Informações do site** | WhatsApp, telefone, e-mail, endereço, horário, Instagram, Facebook, mapa, texto da página *Sobre* |
 | **Minha conta** | nome, e-mail e senha |
 
@@ -46,7 +45,7 @@ Nada é fixo no código: as categorias, o portfólio, os canais de contato e a f
 prisma/               schema, migração e seed (usa as fotos reais)
 src/
   app/(site)/         site público  → /, /projetos, /projetos/[slug], /sobre, /contato
-  app/admin/          painel        → login + (panel)/ dashboard, projetos, categorias, mensagens, configuracoes, conta
+  app/admin/          painel        → login + (panel)/ dashboard, projetos, categorias, configuracoes, conta
   app/api/admin/      APIs de fotos (upload, reordenar, capa, alt, excluir) — sempre autenticadas
   app/media/          entrega das fotos otimizadas (cache imutável de 1 ano)
   proxy.ts            1ª barreira: /admin e /api/admin exigem sessão
@@ -60,7 +59,7 @@ Separação: **UI** (components) → **ações** (`actions.ts`, só validam sess
 ### Segurança
 - Senha com bcrypt (custo 12); sessão em JWT assinado, cookie `httpOnly`, `SameSite=Lax`, `Secure` em produção, validade de 14 dias. Trocar a senha encerra as outras sessões.
 - Proteção em camadas: `proxy.ts` → guardas nas páginas/ações (`requireAdmin`) → guarda nas APIs (`requireAdminApi`, com checagem de origem contra CSRF). Login com limite de tentativas e mensagem única de erro.
-- Formulário de contato com campo-armadilha e limite por IP. Painel `noindex` e fora do `robots`/sitemap. Nenhum link para o painel no site público.
+- Sem formulário de contato: o atendimento é por WhatsApp (dois números) e Instagram, o que elimina spam e a necessidade de e-mail/notificação. Painel `noindex` e fora do `robots`/sitemap. Nenhum link para o painel no site público.
 
 ### Fotos
 Cada upload passa por `sharp`: corrige a rotação do celular, **nunca amplia**, gera WebP em 480/960/1600/2400 px (só as menores que a original) e um placeholder borrado de ~1 KB. No site, `srcset`/`sizes` deixam o navegador escolher a versão certa; `width`/`height` reservam o espaço (CLS 0); tudo é `lazy` exceto a foto do hero. Fotos aparecem **inteiras** (proporção original); só cards/hero recortam, com `object-fit: cover`, nunca esticando.
@@ -101,7 +100,7 @@ Segurança no Supabase: todas as tabelas têm **RLS ligado sem políticas** (mig
 
 Alternativa sem serverless: um servidor Node com disco persistente (VPS) funciona com `STORAGE_DRIVER=local`, `npm run build && npm start`, HTTPS na frente e backup da pasta `data/`.
 
-**Limites e cuidados serverless (já tratados):** fotos grandes são reduzidas no navegador antes do envio (as funções limitam o corpo da requisição) e enviadas uma por vez; o limitador de tentativas (login, contato, `/api/health`) fica no banco. Confirme no primeiro deploy que o `proxy.ts` (Next 16) e o cache incremental funcionam no adaptador da Netlify — o painel também confere a sessão dentro de cada página e API, então a proteção não depende só do `proxy`.
+**Limites e cuidados serverless (já tratados):** fotos grandes são reduzidas no navegador antes do envio (as funções limitam o corpo da requisição) e enviadas uma por vez; o limitador de tentativas (login e `/api/health`) fica no banco. Confirme no primeiro deploy que o `proxy.ts` (Next 16) e o cache incremental funcionam no adaptador da Netlify — o painel também confere a sessão dentro de cada página e API, então a proteção não depende só do `proxy`.
 
 ## Manter o banco ativo (ping automático)
 

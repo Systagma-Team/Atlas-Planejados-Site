@@ -10,13 +10,12 @@ import { mediaThumb } from "@/lib/media";
 export const metadata: Metadata = { title: "Painel" };
 
 export default async function DashboardPage() {
-  const [total, published, drafts, categories, hiddenCategories, unread, recent, settings] = await Promise.all([
+  const [total, published, drafts, categories, hiddenCategories, recent, settings] = await Promise.all([
     db.project.count(),
     db.project.count({ where: { published: true, category: { isActive: true } } }),
     db.project.count({ where: { published: false } }),
     db.category.count(),
     db.category.count({ where: { isActive: false } }),
-    db.lead.count({ where: { readAt: null } }),
     db.project.findMany({
       orderBy: { updatedAt: "desc" },
       take: 6,
@@ -32,7 +31,6 @@ export default async function DashboardPage() {
     { label: "Em rascunho", value: drafts },
     { label: "Categorias", value: categories },
     { label: "Categorias ocultas", value: hiddenCategories },
-    { label: "Mensagens novas", value: unread },
   ];
 
   return (
